@@ -1,0 +1,397 @@
+<%- include("../layouts/userHeader") %>
+
+<header class="header">
+       
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="header__logo">
+                    <a href="/"><h2 style="color: black;text-decoration: double; ">MEN SPACE</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li ><a href="/">Home</a></li>
+                        <li><a href="shop">Shop</a></li>
+                        <!-- <li><a href="#">Pages</a>
+                            <ul class="dropdown">
+                                <li><a href="./about.html">About Us</a></li>
+                                <li><a href="./shop-details.html">Shop Details</a></li>
+                                <li><a href="./shopping-cart.html">Shopping Cart</a></li>
+                                <li><a href="./checkout.html">Check Out</a></li>
+                                <li><a href="./blog-details.html">Blog Details</a></li>
+                            </ul> -->
+                        <!-- </li> -->
+                       
+                      
+                        
+                       
+                        
+                         
+                        <% if(typeof userData === 'undefined') { %>
+                    
+                       <li> <a href="login"><button  type="button" class="btn btn-outline-dark">sign in</button> </a></li>
+
+                        <li> <a href="register"> <button type="button" class="btn btn-outline-dark ">sign up</button> </a> </li>
+                          
+                        <% } else { %>
+
+
+
+                            <li><a href="#">Accounts</a>
+                                <ul class="dropdown">
+                                    <li><a href="/userProfile">profile</a></li>
+                                    <li><a href="/orders">orders</a></li>    
+                                </ul>
+                            </li>
+
+                       <li>    <a href="logout"><button  type="button" class="btn btn-outline-dark">Log Out</button> </a></li> 
+                       
+                        
+                    </ul>
+                    
+                    
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="header__nav__option">
+                    <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
+                    <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
+                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span>0</span></a>
+                   
+                </div>
+                
+            </div>
+           
+                
+
+            <% } %> 
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Check Out</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Check Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+   
+    <div class="container">
+        
+        <div class="cart__discount col-md-4">
+            <h6>Discount codes</h6>
+            
+            <form method="post" action="/coupon" >
+                <input type="text" placeholder="Coupon code" name="code">
+                <input type="hidden" value="<%= userCart.totalprice %>" name="price">
+                
+                <button type="submit" >Apply</button>
+                
+            </form>
+            
+            <% if(typeof message == 'undefined'){ %>
+                <% }else{ %>
+                    <p><%= message %></p>
+                    <% } %>
+        </div>
+        <div class="checkout__form">
+            <form action="/checkout" id="checkout" method="post">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        
+                        <h6 class="checkout__title">Billing Details   <a href="/manageAddress"><button type="button" style="position: absolute; right: 0;" class="btn btn-dark">Manage Address </button> </a> </h6>
+                        
+                    
+                        <div class="row" >
+                      <div class="col-lg-12 checkout__title" >
+                        
+                            
+<form>
+    <% address.forEach((address, index) => { %>
+      <div>
+        <input type="radio" name="address_id" class="address_id" value="<%= address._id %>" />
+        <div >
+          <div class=" a-<%= address._id %>"><%= address.name %></div>
+          <div class=" a-<%= address._id %>"><%= address.mobile %></div>
+          <div class=" a-<%= address._id %>"><%= address.postcode %></div>
+          <div class=" a-<%= address._id %>"><%= address.address %></div>
+          <div class=" a-<%= address._id %>"><%= address.city %></div>
+          
+          <div class=" a-<%= address._id %>"><%= address.state %></div>
+        </div>
+      </div>
+    <% }); %>
+
+  
+                        </div>
+    
+                            <h6 class="checkout__title">Add new address</h6>
+                           
+                            <div class="col-lg-12">
+                                <div class="checkout__input">
+                                    <p>Name<span>*</span></p>
+                                    <input required type="text" name="name" class="name" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Phone<span>*</span></p>
+                            <input required type="text" name="phoneNumber" class="mobile" />
+                        </div>
+                        
+                        <div  class="checkout__input">
+                            <p>postcode<span>*</span></p>
+                            <input required type="text" name="postcode" class="postcode" />
+                            
+                        </div>
+                        
+                        <div class="checkout__input">
+                            
+                            <p>Address<span>*</span></p>
+                            <input required  type="text" name="address" class="address" />
+                        </div>
+                        <div class="checkout__input">
+                            <p>Town/City<span>*</span></p>
+                            <input required type="text" name="city" class="city" />
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="checkout__input">
+                                    <p>State<span>*</span></p>
+                                    <input type="text" name="state" class="state" />
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </form>
+                       
+                        
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                          
+                            <div class="checkout__order__products">Product <span>Total</span></div>
+                            <% for(let i=0;i<productData.length;i++) { %>
+                            <ul class="checkout__total__products "  >
+                                <li  ><%=productData[i].name%> <span  ><%=productData[i].price%></span></li   >
+           
+                            </ul>
+                            <% } %>
+                            
+                            <ul class="checkout__total__all">
+                                <li>Sub Total <span> <%= userCart.totalprice %> </span></li>
+                                <li>Discount amount <span> <%= userCart.discountprice %> </span></li>
+                                <input type="hidden" name="total" value="<%= userCart.totalprice-userCart.discountprice %>">
+                                <li> Total <span> <%= userCart.totalprice-userCart.discountprice %> </span></li>
+                            </ul>
+                            <div class="checkout__input__checkbox">
+                                <label for="payment"  >
+                                    Cash on delivery
+                                    <input type="radio" id="payment" name="payment" value="COD" >
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="checkout__input__checkbox">
+                                <label for="paypal">
+                                    razorpay
+                                    <input type="radio" id="paypal" name="payment" value="razorpay">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<!-- Checkout Section End -->
+
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="#"><h2 style="color:azure;text-decoration: double; ">MEN SPACE</h2></a>
+                    </div>
+                    <p>The customer is at the heart of our unique business model, which includes design.</p>
+                    <a href="#"><img src="img/payment.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T shirts</a></li>
+                        <li><a href="#">Shoes</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Delivary</a></li>
+                        <li><a href="#">Return & Exchanges</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                <div class="footer__widget">
+                    <h6>NewLetter</h6>
+                    <div class="footer__newslatter">
+                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                        <form action="#">
+                            <input type="text" placeholder="Your email">
+                            <button type="submit"><span class="icon_mail_alt"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="footer__copyright__text">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                  
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<!-- Search Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<script>
+
+const addressRadio = document.querySelectorAll('.address_id')
+const nameInput = document.querySelector('.name')
+const phoneNumberInput = document.querySelector('.mobile')
+const pinCodeInput = document.querySelector('.postcode')
+const addressInput = document.querySelector('.address')
+const localityInput = document.querySelector('.city')
+const stateInput = document.querySelector('.state')
+
+addressRadio.forEach((address)=>{
+    address.addEventListener('change',(event)=>{
+    const addressId = event.target.value
+    
+    const elements = document.querySelectorAll('.a-'+ addressId)  
+        
+    elements.forEach((element,index)=>{
+        if(index === 0){
+            nameInput.value = element.textContent
+        }else if(index === 1){
+            phoneNumberInput.value = element.textContent
+        }else if (index ===2){
+            pinCodeInput.value = element.textContent
+        }else if(index === 3){
+           
+            addressInput.value = element.textContent
+        }else if(index ===4){
+            localityInput.value = element.textContent
+            
+        }else if(index === 5){
+            discrictInput.value = element.textContent
+        }else {
+            alert(stateInput.value)
+            stateInput.value = element.textContent
+            
+        }
+    })
+    
+    
+})
+})
+
+
+
+function updateForm(selectElement) {
+    console.log("here")
+  var selectedIndex = selectElement.selectedIndex;
+  var addressIndex = selectElement.options[selectedIndex].value;
+  if (addressIndex === "please select") {
+    // Clear the form fields if "please select" option is selected
+    document.getElementsByName("name")[0].value = "";
+    document.getElementsByName("address")[0].value = "";
+    document.getElementsByName("postcode")[0].value = "";
+    document.getElementsByName("city")[0].value = "";
+    document.getElementsByName("state")[0].value = "";
+    
+  } else {
+    // Fill in the form fields with the selected address
+    var selectedAddress =JSON.stringify(address[0])
+
+    let data = selectedAddress.name
+    document.getElementsByName("name")[0].value = selectedAddress.name;
+    document.getElementsByName("address")[0].value = selectedAddress.address;
+    document.getElementsByName("postcode")[0].value = selectedAddress.postcode;
+    document.getElementsByName("city")[0].value = selectedAddress.city;
+    document.getElementsByName("state")[0].value = selectedAddress.state;
+  }
+}
+
+
+// $('#he').submit((e)=>{
+//         e.preventDefault()
+//         $.ajax({
+//             url:'/coupon',
+//             data:{
+//                 code:code
+
+//             },
+//             method:'post',
+
+//         })
+//     })
+
+
+    
+</script>
+
+
+
+
+
+
+
+
+<%- include("../layouts/userFooter") %>

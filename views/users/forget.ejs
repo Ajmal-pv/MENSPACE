@@ -1,0 +1,46 @@
+<%- include("../layouts/header.ejs") %>
+
+
+
+
+    <div class="container d-flex flex-column">
+      <div class="row align-items-center justify-content-center
+          min-vh-100">
+        <div class="col-12 col-md-8 col-lg-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="mb-4">
+                <h5>Forgot Password?</h5>
+                <p class="mb-2">Enter your registered email ID to reset the password
+                </p>
+              </div>
+              <form  action="/forget" method="post">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" class="form-control" name="email" placeholder="Enter Your Email"
+                    required="">
+                </div>
+                     <% if (typeof message != 'undefined') {
+                    %>
+                         <p><%= message %></p>
+
+                    <%
+                    
+                 }
+                    
+                          %> 
+
+            </div>
+                <div class="mb-3 d-grid">
+                  <button type="submit"  value="send resend link"  class="btn btn-primary">
+                    Reset Password
+                  </button>
+                </div>
+               
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<%- include("../layouts/footer.ejs") %>

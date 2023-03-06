@@ -1,0 +1,42 @@
+<%- include("../layouts/header.ejs") %>
+<section>
+  <div class="container mt-4">
+     <div class="row">
+       
+      <div class="col-md-6">
+          <h2 class="text-center">Update Product</h2>
+          <form action="/admin/updateProduct" method="post" enctype="multipart/form-data"  >
+              <!-- enctype="multipart/form-data"  -->
+              
+              <label for="" class="mt-3">Name</label>
+              <input type="text"name="name"class="form-control"  value="<%= productData.name %>" >
+              <input type="hidden" name="id" value="<%= productData._id %>">
+  
+              <label for="" class="mt-4">Discription</label>
+              <input type="text"name="discription"class="form-control" value="<%= productData.discription %>" >
+  
+              <label for="" class="mt-4">Price</label>
+              <input type="text"name="price"class="form-control" value="<%= productData.price %>" >
+              
+              <label for="" class="mt-4">Stock</label>
+              <input type="text"name="stock"class="form-control" value="<%= productData.stock %>" >
+              
+              <label for="" class="mt-4">select category</label>
+              
+              <select name="category" id=""   class="form-control  " >
+                <option value="<%= productData.category._id%>"> <%= productData.category.name %>  </option>
+                <% for(let res of categoryData){ %>
+                <option value="<%= res._id %>"><%= res.name %></option>
+                <% } %>
+              </select> 
+  
+              <label for="" class="mt-4">Image</label>
+              <input type="file" name="image" accept="image/png,image/jpeg" class="form-control" multiple>  
+  
+              <input type="submit" value="Submit" class="btn btn-success mt-4">
+          </form>
+      </div>
+     </div>   
+  </div>
+  </section>
+<%- include("../layouts/footer.ejs") %> 

@@ -1,0 +1,148 @@
+
+<%- include("../layouts/userHeader") %>
+  <!-- Page Preloder
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__option">
+            <div class="offcanvas__links">
+                <a href="./login.ejs">Sign in</a>
+                <a href="#">FAQs</a>
+            </div>
+            <div class="offcanvas__top__hover">
+                <span>Usd <i class="arrow_carrot-down"></i></span>
+                <ul>
+                    <li>USD</li>
+                    <li>EUR</li>
+                    <li>USD</li>
+                </ul>
+            </div>
+        </div>
+        <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
+            <a href="#"><img src="img/icon/heart.png" alt=""></a>
+            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
+            <div class="price">$0.00</div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__text">
+            <p>Free shipping, 30-day return or refund guarantee.</p>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+       
+        <div class="container">
+            <div class="row">
+                <!-- <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a href="#"><img src="img/logo.png" alt=""></a>
+                    </div>
+                </div> -->
+                <div class="col-lg-12 col-md-12">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="shop">Shop</a></li>
+                             
+                            <li ><a href="#">Accounts</a>
+                                <ul class="dropdown">
+                                    <li><a href="/userProfile">profile</a></li>
+                                    <li><a href="/orders">orders</a></li>
+                                    <li><a href="cartpage">Shopping Cart</a></li>
+                                    
+                                    
+                                </ul>
+                            </li>
+
+                            <li> <a href='cartpage'> Cart</a> </li>
+                            <!-- <li><a href="#">Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href="./about.html">About Us</a></li>
+                                    <li><a href="./shop-details.html">Shop Details</a></li>
+                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
+                                    <li><a href="./checkout.html">Check Out</a></li>
+                                    <li><a href="./blog-details.html">Blog Details</a></li>
+                                </ul> -->
+                            </li>
+                           
+                          
+                            
+                             
+                            <% if(typeof userData === 'undefined') { %>
+                        
+                           <li> <a href="login"><button  type="button" class="btn btn-outline-dark">sign in</button> </a></li>
+
+                            <li> <a href="register"> <button type="button" class="btn btn-outline-dark ">sign up</button> </a> </li>
+                              
+                            <% } else { %>
+                                <a href="logout"><button  type="button" class="btn btn-outline-dark">Log Out</button> </a>
+
+                            <% } %> 
+
+                            
+                        </ul>
+                        
+                        
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
+                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
+                       
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold"></span><span class="text-black-50"></span><span> </span></div>
+        </div>
+ 
+        <div class="col-md-8 border-right">
+         <form action="" method="post">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">User Address</h4>
+                </div>
+              
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Name </label><input type="text"  name="name" class="form-control" placeholder="name" value=""></div>
+                    <div class="col-md-12"><label class="labels">Address </label><input type="text"  name="address" class="form-control" placeholder="Address" value=""></div>
+                    <div class="col-md-12"><label class="labels">Postcode</label><input type="text" name="postcode" class="form-control" placeholder="pin" value=""></div>
+                    <div class="col-md-12"><label class="labels">city/District/town</label><input name="city" type="text" class="form-control" placeholder="City" value=""></div>
+                                        
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6"><label class="labels">Country</label><input type="text" name="country" class="form-control" placeholder="country" value=""></div>
+                    <div class="col-md-6"><label class="labels">State/Region</label><input type="text" name="state" class="form-control" value="" placeholder="state"></div>
+                    <div class="col-md-6"><label class="labels">mobile</label><input type="text" name="mobile" class="form-control" value="" placeholder="mobile"></div>
+                </div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Save Address</button>
+                    </div>
+                 <div><a href="/manageAddress"><button  type="button" class="btn btn-outline-info">goback</button></a></div>   
+
+            </div>
+        </form> 
+        </div>
+
+    </div>
+</form> 
+
+</div>
+</div>
+</div>
+<%- include("../layouts/userFooter") %>
