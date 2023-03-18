@@ -475,16 +475,18 @@ body {
 	border-radius: 20px;
 	font-weight: 700;
 }
-#content main .table-data .order table tr td .status.completed {
+#content main .table-data .order table tr td .status.placed {
 	background: var(--blue);
 }
-#content main .table-data .order table tr td .status.process {
+#content main .table-data .order table tr td .status.Cancelled {
+	background: var(--red);
+}
+#content main .table-data .order table tr td .status.Delivered {
 	background: var(--yellow);
 }
-#content main .table-data .order table tr td .status.pending {
+#content main .table-data .order table tr td .status.Returned {
 	background: var(--orange);
 }
-
 
 #content main .table-data .todo {
 	flex-grow: 1;

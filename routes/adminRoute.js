@@ -78,7 +78,10 @@ admin_route.get('/coupon',adminAuth.isLogin,adminController.couponLoad)
 admin_route.get('/add-coupon',adminAuth.isLogin,adminController.newCoupon)
 admin_route.post('/add-coupon',adminController.addCoupon)
 admin_route.get('/deleteCoupon',adminController.deleteCoupon)
-
+//sales report
+admin_route.get('/salesReport',adminAuth.isLogin,adminController.salesLoad)
+admin_route.post('/SalesFilter',adminAuth.isLogin,adminController.SalesFilter)
+admin_route.post('/salesReport-pdf',adminAuth.isLogin,adminController.SalesPdf)
 
 
 //logout

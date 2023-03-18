@@ -96,16 +96,25 @@
     <div class="container">
         
         <div class="cart__discount col-md-4">
+            <% if(userCart.discountprice==0){ %>
             <h6>Discount codes</h6>
+            
             
             <form method="post" action="/coupon" >
                 <input type="text" placeholder="Coupon code" name="code">
-                <input type="hidden" value="<%= userCart.totalprice %>" name="price">
+                
                 
                 <button type="submit" >Apply</button>
                 
+            </form><% }else if(userCart.discountprice>0){ %>
+                <h6>Discount codes</h6>
+                <form action="/delete-coupon">
+                <input type="text" placeholder="Coupon code" value="<%= coupon %>" name="code">
+                
+                
+              <a href="/delete-coupon"> <button class="btn-dark" >Delete</button></a> 
             </form>
-            
+            <% } %>
             <% if(typeof message == 'undefined'){ %>
                 <% }else{ %>
                     <p><%= message %></p>
@@ -123,16 +132,16 @@
                       <div class="col-lg-12 checkout__title" >
                         
                             
-<form>
-    <% address.forEach((address, index) => { %>
-      <div>
-        <input type="radio" name="address_id" class="address_id" value="<%= address._id %>" />
-        <div >
-          <div class=" a-<%= address._id %>"><%= address.name %></div>
-          <div class=" a-<%= address._id %>"><%= address.mobile %></div>
-          <div class=" a-<%= address._id %>"><%= address.postcode %></div>
-          <div class=" a-<%= address._id %>"><%= address.address %></div>
-          <div class=" a-<%= address._id %>"><%= address.city %></div>
+           <form>
+                 <% address.forEach((address, index) => { %>
+                    <div>
+                  <input type="radio" name="address_id" class="address_id" value="<%= address._id %>" />
+                  <div >
+          <div class=" a-<%= address._id %>"><%=address.name%></div>
+          <div class=" a-<%= address._id %>"><%=address.mobile%></div>
+          <div class=" a-<%= address._id %>"><%=address.postcode%></div>
+          <div class=" a-<%= address._id %>"><%=address.address%></div>
+          <div class=" a-<%= address._id %>"><%=address.city%></div>
           
           <div class=" a-<%= address._id %>"><%= address.state %></div>
         </div>
@@ -153,14 +162,13 @@
                         </div>
                         <div class="checkout__input">
                             <p>Phone<span>*</span></p>
-                            <input required type="text" name="phoneNumber" class="mobile" />
+                            <input required type="text" name="phoneNumber" class="phone" />
                         </div>
                         
                         <div  class="checkout__input">
                             <p>postcode<span>*</span></p>
                             <input required type="text" name="postcode" class="postcode" />
-                            
-                        </div>
+                         </div>
                         
                         <div class="checkout__input">
                             
@@ -171,15 +179,11 @@
                             <p>Town/City<span>*</span></p>
                             <input required type="text" name="city" class="city" />
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="checkout__input">
-                                    <p>State<span>*</span></p>
-                                    <input type="text" name="state" class="state" />
-                                </div>
-                            </div>
-                          
+                        <div class="checkout__input">
+                            <p>State<span>*</span></p>
+                            <input  type="text" name="state" class="state" />
                         </div>
+                       
                     </form>
                        
                         
@@ -218,7 +222,7 @@
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
-                            <button type="submit" class="site-btn">PLACE ORDER</button>
+                            <button id="razorpay" type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
                 </div>
@@ -300,11 +304,12 @@
         </form>
     </div>
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 
 const addressRadio = document.querySelectorAll('.address_id')
 const nameInput = document.querySelector('.name')
-const phoneNumberInput = document.querySelector('.mobile')
+const phoneNumberInput = document.querySelector('.phone')
 const pinCodeInput = document.querySelector('.postcode')
 const addressInput = document.querySelector('.address')
 const localityInput = document.querySelector('.city')
@@ -330,11 +335,7 @@ addressRadio.forEach((address)=>{
             localityInput.value = element.textContent
             
         }else if(index === 5){
-            discrictInput.value = element.textContent
-        }else {
-            alert(stateInput.value)
             stateInput.value = element.textContent
-            
         }
     })
     
@@ -345,7 +346,7 @@ addressRadio.forEach((address)=>{
 
 
 function updateForm(selectElement) {
-    console.log("here")
+    
   var selectedIndex = selectElement.selectedIndex;
   var addressIndex = selectElement.options[selectedIndex].value;
   if (addressIndex === "please select") {
@@ -370,20 +371,87 @@ function updateForm(selectElement) {
 }
 
 
-// $('#he').submit((e)=>{
-//         e.preventDefault()
-//         $.ajax({
-//             url:'/coupon',
-//             data:{
-//                 code:code
-
-//             },
-//             method:'post',
-
-//         })
-//     })
 
 
+
+function razorpay(order){
+    
+var options = {
+    "key": "rzp_test_hrecA2cXP9u9Me", 
+    "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "MEN SPACE", //your business name
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+    "handler":function (response){
+        verifyPayment(response,order)
+    }
+   ,
+    "prefill": {
+        "name": "Gaurav Kumar", //your customer's name
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+}
+var rzp1 = new Razorpay(options);
+rzp1.open();
+}
+
+
+
+
+$('#checkout').submit((e)=>{
+        
+        e.preventDefault()
+        
+        $.ajax({
+            url:'/checkout',
+            data:$('#checkout').serialize(),
+            method:'post',
+            success:(response)=>{
+                if(response.status){
+                    
+                    location.href='orderConfirm'
+                }else {
+                    
+                    razorpay(response.order)
+                   
+                    
+                }
+            }
+
+
+        })
+    })
+
+function verifyPayment(payment,order){
+    $.ajax({
+      url:'/verify-payment',
+      data:{
+        payment,
+        order
+      },
+      method:'post',
+      success:(response)=>{
+        if(response.success){
+            
+            location.href='orderConfirm'
+        }else if(response.paymentFailed){
+            alert('payment failed')
+        }
+      }
+      
+
+    })
+}
     
 </script>
 

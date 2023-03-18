@@ -8,25 +8,26 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod:{
     type:String,
-    default:'COD'
+    
     },
     paymentStatus:{
         type:String,
-        default:'pending'
+        
     },
     products: [
       {
         productId: {
          type:ObjectId,
         ref:'Product'},
-        quantity: Number
+        quantity: Number,
+        sellingPrice:Number
       }
     ],
    
     totalPrice: Number,
     customer: {
       name: String,
-      phone: String,
+      phone:String,
       Address: String,
       postcode:String,
       city:String,

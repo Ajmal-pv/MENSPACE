@@ -83,7 +83,8 @@
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
                     <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
-                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span>0</span></a>
+                    <span id="badge"><%=userData.wishList.length%></span>
+                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span ></span></a>
                    
                 </div>
                 
@@ -152,23 +153,23 @@
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                 <div class="product__details__pic__item"  >
                                     <div class="product__details__pic__item" id="image-zoom">
-                                        <img src="/imagess/<%= productData.image[0]  %>" alt="">
+                                        <img src="/imagess/<%= productData.image[0]%>" alt="">
                                       </div>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
                                 <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[1]  %>" alt="">
+                                    <img src="/imagess/<%= productData.image[1]%>" alt="">
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[2]  %>" alt="">
+                                    <img src="/imagess/<%= productData.image[2]%>" alt="">
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-4" role="tabpanel">
                                 <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[3]  %>" alt="">
+                                    <img src="/imagess/<%= productData.image[3]%>" alt="">
                                 
                                 </div>
                             </div>
@@ -183,7 +184,7 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
                         <div class="product__details__text">
-                            <h4><%= productData.name %></h4>
+                            <h4><%=productData.name%></h4>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -192,7 +193,7 @@
                                 <i class="fa fa-star-o"></i>
                                 <span> - 5 Reviews</span>
                             </div>
-                            <h3> <%= productData.price %> </h3>
+                            <h3> <%=productData.price%> </h3>
                             <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
                                 cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
                             with placket.</p>
@@ -235,15 +236,16 @@
                             <div class="product__details__cart__option">
                                 
                                
-                                <a href="/add-to-cart?id=<%=productData._id %>" type="submit" class="primary-btn">add to cart</a>
+                                <a href="/add-to-cart?id=<%=productData._id%>" type="submit" class="primary-btn">add to cart</a>
                             </div>
                           </div>
                           
                      
          
-                            <div class="product__details__btns__option">
-                                <a href="/add-to-wislist?id=<%=productData._id %>"><i class="fa fa-heart"></i> add to wishlist</a>
-                                <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                            <div class="d-flex justify-content-center product__details__btns__option">
+                                
+                              <button class="btn btn-light"   onclick="addToWishlist('<%=productData._id %>')"><i class="fa fa-heart"></i> Add to wishlist</button>
+                                <!-- <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a> -->
                             </div>
                             <div class="product__details__last__option">
                                 <h5><span>Guaranteed Safe Checkout</span></h5>
@@ -605,7 +607,27 @@
             </form>
         </div>
     </div>
+
+ 
     <script>
+       
+    function addToWishlist(proId){
+         $.ajax({
+               url:'/add-to-wislist',
+               data:{
+                proId:proId
+               },
+               method:'POST',
+               success: function (response){
+                if(response.length){
+                document.getElementById('badge').innerHTML=response.length
+            }
+               }
+
+         })
+
+    }
+
      
      const imageZoom = document.querySelector('#image-zoom');
 let posX, posY, mouseX, mouseY, scale = 1;
@@ -632,5 +654,5 @@ imageZoom.addEventListener('mouseup', () => {
 
 
     </script>
-  
-    <%- include("../layouts/userFooter") %>
+     <%- include("../layouts/userFooter") %>
+   

@@ -8,8 +8,13 @@ const Coupon = require('../models/couponModel')
 const multer = require('multer')
 // const bodyParser = require('body-parser');
 const randomstring = require('randomstring')
+const ejs = require('ejs')
+const pdf = require('html-pdf')
+const fs = require('fs')
+const path = require('path')
 
 const { findById, findByIdAndDelete } = require('../models/userModel')
+const { log } = require('console')
 
 const securePassword = async (password) => {
   try {
@@ -57,12 +62,91 @@ const verifyLogin = async (req, res) => {
 const loadDashboard = async (req, res) => {
   try {
     const userData = await User.findById({ _id: req.session.admin_id })
-    res.render('home', { admin: userData })
+    const users = await User.find({})
+    const orderData = await Order.find({}).sort({createdDate:'desc'})
+    const orderSuccess = await Order.find({paymentStatus:"Charged"})
+    let totalprice=0
+    let sum=0
+    for(i=0;i<orderSuccess.length;i++){
+      sum=sum+orderSuccess[i].totalPrice
+    }
+  const products = await Product.find({}).populate('category')
+  
+
+  res.render('home', { admin: userData, orderData, users, sum, products })
+    
   } catch (error) {
     console.log(error.message)
   }
 }
+const salesLoad = async(req,res)=>{
+  try {
 
+  const orderSuccess = await Order.find({status:"Delivered"}).sort({createdDate:'desc'})
+    const orderDelivered = await Order.find({status:"Delivered"})
+    
+    const orderCanclled = await Order.find({status:"Cancelled"})
+   
+    let sum=0
+    for(i=0;i<orderSuccess.length;i++){
+      sum=sum+ orderSuccess[i].totalPrice
+    }
+
+    res.render('salesReport',{orderSuccess,sum,orderDelivered,orderCanclled,})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+const SalesFilter = async(req,res)=>{
+  try {
+   const start = req.body.fromInput
+   const end = req.body.toInput
+  const orderData = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'})
+   let sum=0
+    for(i=0;i<orderData.length;i++){
+      sum=sum+orderData[i].totalPrice
+    }
+   
+   const jsonresponse = {orderData,sum}
+   res.json(jsonresponse)
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+const SalesPdf = async(req,res)=>{
+  try {
+    const start = req.body.start
+   const end = req.body.end
+    const orderSuccess = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'})
+    const data ={
+      orderSuccess:orderSuccess
+    }
+  const filePath =  path.resolve(__dirname,'../views/admin/salesPdf.ejs')
+  const htmlString =fs.readFileSync(filePath).toString()
+ const ejsData = ejs.render(htmlString,data)
+ let options ={
+    format: 'A4',
+   orientation: "portrait",
+    border: "10mm"
+
+ }
+       pdf.create(ejsData, options).toStream((err, stream) => {
+            if (err) {
+                console.log(err);
+            }
+            res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment; filename="sales-report.pdf"'
+            });
+            stream.pipe(res);
+        });
+// }
+// )
+ console.log('pdf generated')
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 // user loading
 const userLoad = async (req, res) => {
   try {
@@ -326,6 +410,9 @@ module.exports = {
   loadLogin,
   verifyLogin,
   loadDashboard,
+  salesLoad,
+  SalesFilter,
+  SalesPdf,
   categoryLoad,
   addCategoryLoad,
   addCategory,

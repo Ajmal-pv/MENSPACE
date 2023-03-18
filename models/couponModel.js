@@ -11,7 +11,7 @@ const CouponSchema = new Schema({
                    required: true },
   maxDiscountAmount: { type: Number },
   minPurchase:{
-    type:String,
+    type:Number,
     required:true
   },
   expirationDate: { type: Date, required: true },

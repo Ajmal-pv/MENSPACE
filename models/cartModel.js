@@ -13,6 +13,9 @@ quantity:{
   type:Number,
   default:0
   
+},
+sellingPrice:{
+  type:Number
 }
 
  })

@@ -7,6 +7,7 @@ const Product = require('../models/productModel')
 const Category = require('../models/categoryModel')
 const otpGenerator = require('otp-generator')
 const Banner = require('../models/bannerModel')
+const Cart = require('../models/cartModel')
 
 
 // for mail send
@@ -137,8 +138,10 @@ const loadpage=async(req,res)=>{
     const bannerData = await Banner.find({})
     const products = await Product.find({})
     if(userData){
-        res.render('loadpage',{userData,bannerData,products})
-        console.log('hi');
+        const cart = await Cart.findOne({user:userData})
+        const cartData = cart.product
+        res.render('loadpage',{userData,bannerData,products,cartData})
+       
     }else{
         res.render('loadpage',{bannerData,products})
     }
@@ -231,7 +234,7 @@ const verifyMail = async(req,res)=>{
     if(userOtp === otp){
     const updateInfo = await User.updateOne({_id:req.body.id},{$set:{ is_verified:1  }})
 
-    console.log(updateInfo);
+    
     res.render('email-verified');
     
 
@@ -295,13 +298,13 @@ const loginLoad = async(req,res)=>{
 }
 //login verify
 const verifyLogin = async (req,res) => {
-    console.log("verify login");
+    
     try {
-        console.log("hello");
+       
         const email = req.body.email;
         const password = req.body.password;
      const userData = await User.findOne({email:email})
-     console.log(userData);
+    
      if(userData){
           const passwordMatch =  await bcrypt.compare(password, userData.password);
           if(passwordMatch && userData.is_verified == 1 && userData.is_blocked === 0 && userData.is_admin === 0){
@@ -334,8 +337,8 @@ const loadHome = async(req,res)=>{
          if(req.session.user_id){
              const userData=await User.findById({_id:req.session.user_id})
              const bannerData = await Banner.find({})
-             
-           res.render('home',{bannerData})
+             const cartData = await Cart.findOne({user:req.session.user_id}) 
+             res.render('home',{bannerData,cartData})
         }else{
         res.redirect('/login')
          }
@@ -410,7 +413,7 @@ const resetPassword = async(req,res)=>{
     try {
         const password = req.body.password
         const user_id = req.body.user_id;
-        console.log(user_id)
+       
         const secure_password = await securePassword(password)
     const updatedData = await User.findByIdAndUpdate({_id:user_id},{$set:{password:secure_password ,token:'' }})
               res.render('forget success',{message:'password updated succesfully'})
@@ -427,7 +430,7 @@ const shopLoad = async(req,res)=>{
         const categorylist = await Category.find({})
         if(userData){
         
-        console.log(productList);
+       
         res.render('shop',{productList,userData,categorylist})}
         else{
             res.render('shop',{productList,categorylist})  
@@ -448,10 +451,9 @@ const logoutUser = async(req,res)=>{
 
 const productDetail = async(req,res)=>{
     try {
-     const userData = await req.session.user_id
+     const userData = await User.findById({_id:req.session.user_id})
     const productData = await Product.findById({_id:req.query.id})
-    console.log("product details");
-    console.log(productData);
+   
         
         res.render('productdetails',{productData,userData})
     } catch (error) {
@@ -503,10 +505,9 @@ const addressPage= async(req,res)=>{
     try {
       const userid = req.session.user_id
       const userData = await User.findOne({_id:userid})
-      console.log(userData,"useeeerr");
+     
       const address = userData.Address
-      console.log(address,'here is address');
-      console.log(address.length,'my addressss');
+     
       if(userid){
                res.render('addressPage',{userData,address})
       }else{
@@ -555,7 +556,7 @@ const addAddressIn = async (req, res) => {
       const userData = await User.findOne({ _id: req.session.user_id})
       const userAddress = userData.Address
      const value = userAddress.find(item=>item._id==req.query.id)
-     console.log(value,'addressss');
+    
   
       res.render('editaddress', { userData, value });
     } catch (error) {

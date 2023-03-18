@@ -138,9 +138,12 @@
 						order status:
 						<select name="statusChange" class="form-control" id="statusChange">
 							<option value="<%= orderData.status %>"><%= orderData.status %></option>
-							<option style="color: blue;" value="ordered">Ordered</option>
-							<option style="color: darkgreen;" value="delivered">Delivered</option>
+							<option style="color: blue;" value="Placed">Placed</option>
+							<option style="color: darkgreen;" value="Shipped">Shipped</option>
+							<option style="color: darkgreen;" value="Out-for-delivery">Out for delivery</option>
+							<option style="color: darkgreen;" value="Delivered">Delivered</option>
 							<option style="color: crimson;" value="Cancelled">Cancelled</option>
+							<option style="color: crimson;" value="Returned">Returned</option>
 							
 						  </select>
 
@@ -148,7 +151,7 @@
 						<select name="paymentChange" class="form-control" id="paymentChange">
 							<option value="<%= orderData.paymentStatus  %>"><%= orderData.paymentStatus %></option>
 							<option style="color: blue;" value="pending">pending</option>
-							<option style="color: darkgreen;" value="success">success</option>
+							<option style="color: darkgreen;" value="Charged">Charged</option>
 							<option style="color: crimson;" value="Refunded">Refunded</option>
 							
 						  </select>

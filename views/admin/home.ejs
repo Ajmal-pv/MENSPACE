@@ -85,7 +85,7 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu' ></i>
-			<a href="#" class="nav-link">Categories</a>
+			<a href="#" class="nav-link">Sales</a>
 			<form action="#">
 				<div class="form-input">
 					<input type="search" placeholder="Search...">
@@ -119,32 +119,39 @@
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
+				<a href="salesReport" class="btn-download">
+					
+					<span class="text">Sales report</span>
 				</a>
 			</div>
-<!-- 
+
 			<ul class="box-info">
 				<li>
 					<i class='bx bxs-calendar-check' ></i>
 					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
+						<h3><%= orderData.length %></h3>
+						<p>Total orders</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
+						<h3><%= users.length %></h3>
+						<p>Total users</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-dollar-circle' ></i>
 					<span class="text">
-						<h3>$2543</h3>
+						<h3>₹ <%=sum%></h3>
 						<p>Total Sales</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bx-shopping-bag' ></i>
+					<span class="text">
+						<h3><%=products.length%></h3>
+						<p>Products</p>
 					</span>
 				</li>
 			</ul>
@@ -154,10 +161,9 @@
 				<div class="order">
 					<div class="head">
 						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
+						
 					</div>
-					<table>
+					<table id="orderTable">
 						<thead>
 							<tr>
 								<th>User</th>
@@ -166,83 +172,63 @@
 							</tr>
 						</thead>
 						<tbody>
+							<% for(i=0;i<orderData.length;i++){ %>
 							<tr>
 								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
+									
+									<p><%= orderData[i].customer.name %></p>
 								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
+								<td><%= orderData[i].createdDate.toLocaleString() %></td>
+								<% if(orderData[i].status==='Placed'||orderData[i].status==='Shipped'||orderData[i].status==='Out-for-delivery'){%>
+								<td><span class="status placed"><%= orderData[i].status %></span></td>
+								<% }else if(orderData[i].status==='Cancelled') {%>
+									<td><span class="status Cancelled"><%= orderData[i].status %></span></td>
+									<% }else if(orderData[i].status==='Delivered') {%>
+										<td><span class="status Delivered"><%= orderData[i].status %></span></td>
+										<% }else{ %>
+											<td><span class="status Returned"><%= orderData[i].status %></span></td>
+											<% } %>
+
 							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
+							<% } %>
 						</tbody>
 					</table>
 				</div>
+			
 				<div class="todo">
 					<div class="head">
-						<h3>Todos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3>Products</h3>
+						
 					</div>
 					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li> -->
-					<!-- </ul> -->
+						
+					</ul>
 				</div>
-			</div>
+                
+			</div>	
+			
 		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
+	
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" >
+	<!-- Adding jquery cdn -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js">
+		
+	</script>
+	<!-- Adding datatable cdn -->
+	<script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+      $('#orderTable').DataTable();
+        });
+	</script>
+
+
+
+
 	
 
 	<script src="/adminhome/script.js"></script>

@@ -5,9 +5,11 @@ const bcrypt = require('bcrypt')
 const Product = require('../models/productModel')
 const Coupon = require('../models/couponModel')
 const multer = require('multer')
+const Razorpay = require('razorpay')
 
 const Order = require('../models/orderModel');
 const { find } = require('../models/userModel')
+const { response } = require('../routes/userRoute')
 
 
 
@@ -19,6 +21,7 @@ const addToCart = async (req, res) => {
     const userId = await req.session.user_id;
     const productt = await Product.findOne({ _id: productId })
     const proPrice = productt.price
+    const sellingPrice = productt.price
 
 
 
@@ -46,7 +49,7 @@ const addToCart = async (req, res) => {
 
           const cartUpdate = await Cart.updateOne(
             { user: userId },
-            { $push: { product: { productId, quantity } } });
+            { $push: { product: { productId, quantity,sellingPrice } } });
 
           const priceUpdate = await Cart.updateOne(
             { user: userId }, { $set: { totalprice: totalPrice } })
@@ -54,25 +57,14 @@ const addToCart = async (req, res) => {
 
         }
       } else {
-
-        const cart = new Cart({
-          product: [{ productId, quantity }],
+          const cart = new Cart({
+          product: [{ productId, quantity,sellingPrice }],
           user: userId,
           totalprice: proPrice
         });
         const cartData = await cart.save();
 
       }
-
-
-      const userDatas = await User.findOne({ _id: userId })
-
-      const productIndex = userDatas.wishList.findIndex(p => p.productId == productId)
-      userDatas.wishList.splice(productIndex, 1)
-
-
-      updated = await userDatas.save()
-
       res.redirect("/cartPage");
     } else {
       res.redirect("/login");
@@ -139,6 +131,7 @@ const changeQuantity = async (req, res) => {
 
     const totalPrice = cart.totalprice + count * product.price;
 
+
     await Cart.updateOne(
       { _id: cartId, "product.productId": proId },
       { $inc: { "product.$.quantity": count } }
@@ -150,7 +143,7 @@ const changeQuantity = async (req, res) => {
       { _id: cartId },
       { $set: { totalprice: totalPrice } }
     );
-
+       
     const updatedQuantity = quantity + count;
     const totalprice = updatedQuantity * price
     const jsonResponse = { updatedQuantity, totalPrice, totalprice };
@@ -170,14 +163,21 @@ const deleteCartProduct = async (req, res) => {
     const price = parseInt(productwant.price)
     const CartData = await Cart.findOne({ user: userid })
 
-    const productIndex = await CartData.product.findIndex((p) => p.productId == productId)
+    const productIndex =await CartData.product.findIndex((p) => p.productId == productId)
 
     const q = parseInt(CartData.product[productIndex].quantity)
     CartData.totalprice -= (q * price)
     CartData.product.splice(productIndex, 1)
-    await CartData.save()
+    const cartSave= await CartData.save()
+    const cartDetails = await Cart.findOne({user:userid})
+    const cartTotal=cartDetails.totalprice
 
-    res.redirect('/cartPage')
+
+    const jsonResponse ={cartDetails,cartTotal}
+    res.json(jsonResponse)
+    
+
+    
 
   } catch (error) {
     console.log(error.message);
@@ -204,12 +204,14 @@ const addressPage = async (req, res) => {
 const checkOut = async (req, res) => {
   try {
     const userData = req.session.user_id
+    const discountPrice = await Cart.findOneAndUpdate({ user: req.session.user_id }, { $set: { discountprice: 0 } })
 
     const userinfo = await User.findOne({ _id: userData })
     const address = userinfo.Address
     const userCart = await Cart.findOne({ user: req.session.user_id })
-    const discountPrice = await Cart.findOneAndUpdate({ user: req.session.user_id }, { $set: { discountprice: 0 } })
+    
     const userCarts = userCart.product
+    
 
 
     const Carts = userCarts.map(value => value.productId)
@@ -231,7 +233,8 @@ const checkOut = async (req, res) => {
 const couponpAdd = async (req, res) => {
   try {
     const coupon = req.body.code
-    let cartTotal = req.body.price
+    
+   
 
 
     const userData = req.session.user_id
@@ -239,16 +242,18 @@ const couponpAdd = async (req, res) => {
     const userinfo = await User.findOne({ _id: userData })
     const address = userinfo.Address
     const userCart = await Cart.findOne({ user: req.session.user_id })
+    const cartTotal = userCart.totalprice 
     const userCarts = userCart.product
     const Carts = userCarts.map(value => value.productId)
     const productData = await Product.find({ _id: { $in: Carts } })
 
 
 
-    const couponData = await Coupon.findOne({ code: coupon })
+    const couponData = await Coupon.findOne({code:coupon})
+    const minimum= couponData.minPurchase
 
     if (couponData) {
-      if (cartTotal > couponData.minPurchase) {
+      if (cartTotal>minimum) {
         const couponType = couponData.discountType
         const discountAmount = couponData.discountAmount
         if (couponType === 'percentage') {
@@ -260,11 +265,14 @@ const couponpAdd = async (req, res) => {
           { user: userData },
           { $set: { discountprice : discountPrice } }
         );
-        res.render('checkout', { message: 'coupon applied ', userCarts, productData, userData, address, userCart })
+        const updatedCart = await Cart.findOne({ user: userData });
+        // const jsonResponse = { message:'coupon applied',updatedCart };
+        res.render('checkout', { message: 'coupon applied ', userCarts, productData, userData, address, userCart:updatedCart,coupon })
 
 
       } else {
-        const need = couponData.minPurchase - req.body.price
+        const need =minimum-cartTotal
+        // const jsonResponse = { message:'you have to purchase rupees ' + need + 'more to avail this coupon',updatedCart };
         res.render('checkOut', { message: 'you have to purchase rupees ' + need + 'more to avail this coupon', userCarts, productData, userData, address, userCart })
       }
 
@@ -290,21 +298,21 @@ const couponDelete = async (req, res) => {
 
 const orderCreating = async (req, res) => {
   try {
-
+    
     const userId = req.session.user_id
-    const cartData = await Cart.findOne({ user: userId }).populate('product')
+    const cartData = await Cart.findOne({user:userId}).populate('product')
     const productDetail = cartData.product
-    for (let i = 0; i < productDetail.length; i++) {
-      singleProduct = await Product.findById({ _id: productDetail[i].productId })
-      singleProduct.stock -= cartData.product[i].quantity
-      singleProduct.save()
-    }
+       
+    
+    console.log(req.body);
     const customerName = req.body.name;
+    
     const customerAddress = req.body.address;
     const customerPostcode = req.body.postcode;
     const customerCity = req.body.city;
     const customerState = req.body.state;
-    const customerPhone = req.body.Phone;
+    const customerPhone = req.body.phoneNumber;
+    
 
 
     const customer = {
@@ -325,40 +333,104 @@ const orderCreating = async (req, res) => {
       products: productDetail,
       totalPrice: totalprice,
       customer: customer,
-      status: 'ordered'
+      paymentMethod:req.body.payment,
+      paymentStatus:'pending',
+      status:'Placed'
 
     })
     const orderData = await order.save()
+           if (req.body.payment === 'COD') {
+      
+      let response= {status:true}
+      for (let i = 0; i < productDetail.length; i++) {
+        singleProduct = await Product.findById({ _id: productDetail[i].productId })
+        singleProduct.stock -= cartData.product[i].quantity
+        singleProduct.save()
+      }
+      cartData.product = []
+      cartData.totalprice = 0
+      await cartData.save()
 
-
-
-
-
-
-
-    cartData.product = []
-    cartData.totalprice = 0
-    await cartData.save()
-
-    if (req.body.payment === 'COD') {
-      res.render('orderConfirm', { orderData })
+      res.json(response)
     } else if (req.body.payment === 'razorpay') {
+      var instance = new Razorpay({key_id:'rzp_test_hrecA2cXP9u9Me', key_secret:'BhAVtj9JW3ZWBPbKwEoRFgDe'})
 
+      var options = {
+        amount: cartData.totalprice*100,  // amount in the smallest currency unit
+        currency: "INR",
+        receipt: ''+orderData._id
+      };
+      instance.orders.create(options, function(err, orders) {
+        
+        if(err){
+
+        }else{
+        
+          res.json({success:true,order:orders})
+        }
+
+      });
+      
 
 
     }
+    
+    
 
 
   } catch (error) {
     console.log(error.message);
   }
 }
+//payment verify
+const verifyPayment = async(req,res)=>{
+  try {
+      
+     const orderId = req.body.order.receipt
+      const crypto = require('crypto')
+      const hmac = crypto.createHmac('sha256','BhAVtj9JW3ZWBPbKwEoRFgDe')
+      .update(req.body.payment.razorpay_order_id+'|'+req.body.payment.razorpay_payment_id)
+      .digest('hex')
+     
+      if(hmac == req.body.payment.razorpay_signature){
+          const update = {$set:{
+              paymentStatus: 'Charged'
+          }}
+          const options = {new: true}
+          await Order.findByIdAndUpdate(orderId,update,options).then(()=>{
+           const response={success:true}
+              res.json(response)
+          })
+          
+          
+          const cartData = await Cart.findOne({user:req.session.user_id}).populate('product')
+          const productDetail = cartData.product
+         
+          for (let i = 0; i < productDetail.length; i++) {
+            singleProduct = await Product.findById({ _id: productDetail[i].productId })
+            singleProduct.stock -= cartData.product[i].quantity
+            singleProduct.save()
+          }
+          cartData.product = []
+          cartData.totalprice = 0
+          await cartData.save()
+      }
+     else{
+     const response = {paymentFailed:true}
+      res.json(response)
+     } 
+     
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+
 
 const confirmPage = async (req, res) => {
   try {
     const order = await Order.findOne({ user: req.session.user_id })
 
-    res.render('confirmOrder', { order })
+    res.render('orderConfirm', { order })
   } catch (error) {
     console.log(error.message);
   }
@@ -366,7 +438,8 @@ const confirmPage = async (req, res) => {
 const orderLoad = async (req, res) => {
   try {
     userData = req.session.user_id
-    const orderData = await Order.find({ user: userData }).populate('products.productId')
+    const orderData = await Order.find({ user: userData }).sort({createdDate:-1}).populate('products.productId')
+
     // let products ;
     // console.log("order detailsssssssssssssssssss" + orderData)
     //  console.log("0th irder detailsssssssssss" + orderData[1].products[0])
@@ -393,7 +466,12 @@ const orderLoad = async (req, res) => {
 
 const orderDetails = async (req, res) => {
   try {
-
+    const userData = req.session.user_id
+    const orderData = await Order.findOne({_id:req.query.id}).populate('products.productId')
+    const productData=orderData.products
+    
+    
+        res.render('singleOrder',{userData,orderData,productData})
 
   } catch (error) {
     console.log(error.message);
@@ -412,7 +490,8 @@ const orderCancel = async (req, res) => {
 const
   addToWishlist = async (req, res) => {
     try {
-      const productId = req.query.id
+     
+      const productId = req.body.proId
       const userId = req.session.user_id
       const user = await User.findById({ _id: userId })
 
@@ -421,18 +500,26 @@ const
       if (productIndex === -1) {
         user.wishList.push({ productId })
         const updatedUser = await user.save();
-
-
-        res.redirect('/wishlist')
+        const wishlistLength = user.wishList.length
+       
+       length= parseInt(wishlistLength)
+       
+     
+        const jsonResponse = {length };
+        res.json(jsonResponse);
 
       }
-      else {
-        res.redirect('/wishlist')
+      else{
+        let message="already created"
+        length=user.wishList.length
+        const jsonResponse = {message,length}
+        res.json(jsonResponse)
       }
 
     }
     catch (error) {
       console.log(error.message);
+
     }
 
 
@@ -474,6 +561,7 @@ module.exports = {
   couponDelete,
   changeQuantity,
   orderCreating,
+  verifyPayment,
   confirmPage,
   orderLoad,
   orderDetails,

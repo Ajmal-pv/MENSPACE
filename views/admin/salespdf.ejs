@@ -1,0 +1,24 @@
+<h1>MEN FASHION</h1>
+					<table >
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Date Order</th>
+								<th>total Price</th>
+								<th>payment Method</th>
+							</tr>
+						</thead>
+						<tbody id="tableBody">
+							<% for(i=0;i<orderSuccess.length;i++){ %>
+                                <tr>
+                                    <td>
+                                        
+                                        <p><%=orderSuccess[i].customer.name %></p>
+                                    </td>
+                                    <td><%= orderSuccess[i].createdDate.toLocaleString() %></td>
+									<td><%= orderSuccess[i].totalPrice %></td>
+									<td><%= orderSuccess[i].paymentMethod %></td>
+								<% } %>
+						</tbody>
+					</table>
+				

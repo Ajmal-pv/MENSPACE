@@ -13,7 +13,6 @@ const multer = require('multer')
 const productLoad = async (req, res) => {
  
     const productData = await Product.find({}).populate('category')
-  console.log(productData);
     try {
       res.render('products', { productData })
     } catch (error) {
@@ -54,7 +53,6 @@ const addProductLoad = async (req, res) => {
 // add new product
 const addProduct = async (req, res) => {
     try {
-      console.log(req.files);
       let files =[]
       const imageUpload = await (function(){
         for(let i=0;i<req.files.length;i++){
@@ -87,14 +85,9 @@ const addProduct = async (req, res) => {
 const updateProductLoad = async (req, res) => {
     try {
       const productId = req.query.id
-  
-      console.log('hii')
       const categoryData = await Category.find({})
       
       const productData = await Product.findOne({ _id: req.query.id }).populate('category')
-      console.log(productData.category.name)
-
-      //console.log(productData);
       res.render('updateProduct', { productData,categoryData })
     } catch (error) {
       console.log(error.message)
@@ -111,22 +104,17 @@ const updateProductLoad = async (req, res) => {
         }
         return files
       })()
-      console.log('im here');
       const productId = req.body.id
-      console.log('product update ID',productId);
       if(req.files.length>0){
-      console.log('im at if');
       const updateData = await Product.findOneAndUpdate({_id: productId }, { $set: { name: req.body.name, discription: req.body.discription,category:req.body.category, price: req.body.price,image:imageUpload,stock:req.body.stock} })
       
       res.redirect('/admin/products')}
       else{
-        console.log('im at else');
         const updateData = await Product.findOneAndUpdate({_id: productId }, { $set: { name: req.body.name, discription: req.body.discription,category:req.body.category, price: req.body.price,stock:req.body.stock} })
             res.redirect('/admin/products')
       }
     } catch (error) {
       console.log(error.message)
-      console.log('its an product update error');
     }
      }
   

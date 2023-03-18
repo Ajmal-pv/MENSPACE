@@ -128,34 +128,40 @@
     </div>
 </section>
 <!-- Breadcrumb Section End -->
-<% if(count != 0){ %>
+
+
 <!-- Shopping Cart Section Begin -->
-<section class="shopping-cart spad">
+
+<% if(count != 0){ %>
+    <section class="shopping-cart spad" >
+
+    
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
                     <table>
                         <thead>
-                            <tr>
+                            <tr >
                                 <th>Product</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody >
+                           
                                 
                   <% for(i=0;i<cartProducts.length;i++) { %>
-                                <%= console.log("cart length : "+cartProducts.length) %>
-                                <td class="product__cart__item">
+                  
+                    <tr id="a<%=  products[i]._id %>">   
+                                <td class="product__cart__item"  >
                                     <div class="product__cart__item__pic">
                                         <img width="100px" height="100px" src="/imagess/<%=products[i].image[0]%>" alt="<%= products[i].image[0] %>">
                                     </div>
                                     <div class="product__cart__item__text">
                                         <h6><%=  products[i].name %></h6>
-                                        <%= console.log(products,'hhhhh'); %>
+                                        
 
                                         
                                         <h5><%=  products[i].price %> </h5>
@@ -178,22 +184,24 @@
                                         </div>
                                     </div>
                                 </td>
-                                <!--  -->
+                               
                                   <td class="cart__price" id='he<%=products[i]._id%>'> <%= products[i].price * cartProducts[i].quantity%> </td>
                                   <h1 id='prod'></h1>
                                   <h1 id='qnt'></h1>
                                   
-                                  
-                              <td  class="cart__close"> <a href="/remove-product?id=<%=products[i]._id %>"><i class="fa fa-close"></i> </a></td>
+                                   
                               
+                                <td> <button class="btn-danger" onclick="deleteFromCart('<%=products[i]._id %>')">remove</button></td>
+                              </div>
                             </tr>
+                        </section>
                             
                 <% } %>               
                          
                         </tbody>
                     </table>
                 </div>
-                <div class="row">
+                <div class="row" >
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn">
                             <a href="shop">Continue Shopping</a>
@@ -221,7 +229,7 @@
             </div>
         </div>
     </div>
-</section>
+
 
 
  <% }else { %>
@@ -251,6 +259,8 @@
        
        </div>
     <% } %>
+
+
 <!-- Shopping Cart Section End -->
 
 <!-- Footer Section Begin -->
@@ -327,6 +337,7 @@
 <script>
 
     function changeQuantity(cartId, proId, count) {
+      
       let quantity = parseInt(document.getElementById(proId).innerHTML)
        count=parseInt(count)
       $.ajax({
@@ -342,10 +353,30 @@
            document.getElementById(proId).innerHTML=response.updatedQuantity 
            document.getElementById('price').innerHTML=response.totalPrice
            document.getElementById('he'+proId).innerHTML = response.totalprice
+           
        
            
         }
       })
     }
+
+
+    function deleteFromCart(productDelete){
+        $.ajax({
+            
+            url:'/remove-product?id='+productDelete,
+            method:'get',
+            success: function(jsonresponse)
+    {  
+               document.getElementById('a'+productDelete).innerHTML=''
+               document.getElementById('price').innerHTML=jsonresponse.cartTotal
+    },
+        error: function(error) 
+        {
+            console.log('Error deleting product:', error);
+        }
+             })
+    }
+   
   </script>
 <%- include("../layouts/userFooter") %>
