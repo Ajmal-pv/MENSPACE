@@ -99,6 +99,7 @@ const salesLoad = async(req,res)=>{
 }
 const SalesFilter = async(req,res)=>{
   try {
+    
    const start = req.body.fromInput
    const end = req.body.toInput
   const orderData = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'})
