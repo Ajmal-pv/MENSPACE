@@ -61,7 +61,7 @@
 					<span class="text">Category</span>
 				</a>
 			</li>
-			<li class="active">
+			<li >
 				<a href="products">
 					<i class='bx bxs-doughnut-chart' ></i>
 					<span class="text">Products</span>
@@ -85,7 +85,7 @@
 					<span class="text">Banner management</span>
 				</a>
 			</li>
-			<li>
+			<li class="active">
 				<a href="coupon">
 					<i class='bx bxs-message-dots' ></i>
 					<span class="text">coupon management</span>
@@ -110,7 +110,6 @@
 		<nav>
 			<i class='bx bx-menu' ></i>
 			
-			
 		</nav>
 		<!-- NAVBAR -->
 
@@ -118,14 +117,14 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>Product</h1>
+					<h1>Coupon</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Dashboard</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="products">Products</a>
+							<a class="active" href="coupon">Coupon</a>
 						</li>
 					</ul>
 				</div>
@@ -136,45 +135,44 @@
             <div class="table-data" >
 				<div class="order">
 					<div class="head">
-						<h3> Add New Product</h3>
+						<h3> Add New Coupon</h3>
                         
 						
 					</div>
                     
                    <div>
-                    <form action="/admin/addProduct" method="post" enctype="multipart/form-data" class="form-center">
-                        <label  class="mt-3">Name</label>
+                    <form action="" method="post"  class="form-center">
+                        <label  class="mt-4">code</label>
                         <div class="form-input"> 
-                           <input type="text"name="name"  placeholder="Name" class="mt-3" >
+                            <input type="text"name="code"class="mt-3" placeholder="code">
                        </div>
-                        <label for="" class="mt-4">Description</label>
+                        <label for="" class="mt-4">Discount type</label>
                         <div class="form-input"> 
-                          <input type="text"name="discription" placeholder="Description"class="mt-3">
+                            <select class="mt-3" aria-label="Default select example" name="discountType">
+                                <option selected>select</option>
+                                <option value="percentage">percentage</option>
+                                <option value="flat">flat</option>
+                               
+                              </select>
                         </div>
 
-                       <label for="" class="mt-4 ">Price</label>
+                       <label for="" class="mt-4 ">Discount Amount</label>
                           <div class="form-input"> 
-                             <input type="text"name="price" placeholder="Price"class="mt-3">
+                            <input type="text"name="discountAmount"class="mt-3" placeholder="discountAmount"> 
                           </div> 
-                       <label for="" class="mt-4">Stock</label>
+                       <label for="" class="mt-4">Max discount Amount</label>
                            <div class="form-input"> 
-                             <input type="text"name="stock" placeholder="stock" class="mt-3">
+                            <input type="text"name="MaxdiscountAmount"class="mt-3" placeholder="MaxdiscountAmount">
                            </div>
-                       <label for="" class="mt-4">select category</label>
-                           <div class="form-input"> 
-                              <select name="category" id="" class="mt-3" >
-                                  <option value="">Category</option>
-                                     <% for(let res of productData){ %>
-                                          <option value="<%= res._id %>"><%= res.name %></option>
-                                          <% } %>
-              
-                               </select> 
-                            </div>
+                       <label for="" class="mt-4">Minimum purchase</label>
+                       <div class="form-input"> 
+                        <input type="text"name="Minpurchase"class="mt-3" placeholder="minimumPurchase"> 
+                       </div>
   
-                     <label for="" class="mt-4">Image</label>
-                          <div class="form-input"> 
-                               <input type="file" name="image" accept="image/png,image/jpeg"  multiple> 
-                        </div>
+                     <label for="" class="mt-4">expirationDate</label>
+                     <div class="form-input"> 
+                        <input type="date"name="expirationDate"class="mt-3" placeholder="expirationDate"> 
+                       </div>
                          <input type="submit" value="Submit" class="mt-4" style="background-color:cornflowerblue;">
             </form>
         </div>

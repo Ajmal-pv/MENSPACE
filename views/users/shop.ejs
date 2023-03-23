@@ -92,8 +92,8 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
-                        <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
-                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span>0</span></a>
+                        <a href="wishList"><img src="/images/icon/heart.png" alt=""><span id="badge"></span></a>
+                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span><%= cartData.product.length %></span></a>
                        
                     </div>
                     
@@ -157,133 +157,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__brand">
-                                                <ul>
-                                                    <li><a href="#">Louis Vuitton</a></li>
-                                                    <li><a href="#">Chanel</a></li>
-                                                    <li><a href="#">Hermes</a></li>
-                                                    <li><a href="#">Gucci</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <ul>
-                                                    <li><a href="#">$0.00 - $50.00</a></li>
-                                                    <li><a href="#">$50.00 - $100.00</a></li>
-                                                    <li><a href="#">$100.00 - $150.00</a></li>
-                                                    <li><a href="#">$150.00 - $200.00</a></li>
-                                                    <li><a href="#">$200.00 - $250.00</a></li>
-                                                    <li><a href="#">250.00+</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                    </div>
-                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__size">
-                                                <label for="xs">xs
-                                                    <input type="radio" id="xs">
-                                                </label>
-                                                <label for="sm">s
-                                                    <input type="radio" id="sm">
-                                                </label>
-                                                <label for="md">m
-                                                    <input type="radio" id="md">
-                                                </label>
-                                                <label for="xl">xl
-                                                    <input type="radio" id="xl">
-                                                </label>
-                                                <label for="2xl">2xl
-                                                    <input type="radio" id="2xl">
-                                                </label>
-                                                <label for="xxl">xxl
-                                                    <input type="radio" id="xxl">
-                                                </label>
-                                                <label for="3xl">3xl
-                                                    <input type="radio" id="3xl">
-                                                </label>
-                                                <label for="4xl">4xl
-                                                    <input type="radio" id="4xl">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
-                                    </div>
-                                    <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__color">
-                                                <label class="c-1" for="sp-1">
-                                                    <input type="radio" id="sp-1">
-                                                </label>
-                                                <label class="c-2" for="sp-2">
-                                                    <input type="radio" id="sp-2">
-                                                </label>
-                                                <label class="c-3" for="sp-3">
-                                                    <input type="radio" id="sp-3">
-                                                </label>
-                                                <label class="c-4" for="sp-4">
-                                                    <input type="radio" id="sp-4">
-                                                </label>
-                                                <label class="c-5" for="sp-5">
-                                                    <input type="radio" id="sp-5">
-                                                </label>
-                                                <label class="c-6" for="sp-6">
-                                                    <input type="radio" id="sp-6">
-                                                </label>
-                                                <label class="c-7" for="sp-7">
-                                                    <input type="radio" id="sp-7">
-                                                </label>
-                                                <label class="c-8" for="sp-8">
-                                                    <input type="radio" id="sp-8">
-                                                </label>
-                                                <label class="c-9" for="sp-9">
-                                                    <input type="radio" id="sp-9">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
-                                    </div>
-                                    <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__tags">
-                                                <a href="#">Product</a>
-                                                <a href="#">Bags</a>
-                                                <a href="#">Shoes</a>
-                                                <a href="#">Fashio</a>
-                                                <a href="#">Clothing</a>
-                                                <a href="#">Hats</a>
-                                                <a href="#">Accessories</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                               
+                               
+                              
                             </div>
                         </div>
                     </div>
@@ -309,6 +186,7 @@
                         </div>
                      </div>
                    <div class="row">
+                   <% if (productList.length > 0) {%>
                     <% for(let content of productList) { %>
                         <% if(content.stock>0){ %>
                         <div class="col-lg-4 col-md-6 col-sm-6">
@@ -316,7 +194,7 @@
                                <div class="product__item__pic set-bg id ='image-container"   data-setbg= "/imagess/<%= content.image[0] %>" id='product-image'>
                                 
                                     <ul class="product__hover">
-                                        <li><a href=""><img src="/images/icon/heart.png" alt=""> <span>Add to wishlist</span></a></li>
+                                        <li><a href="" onclick="addToWishlist('<%=content._id%>')"><img src="/images/icon/heart.png" alt="" > <span>Add to wishlist</span></a></li>
                                         <li><a href=""><img src="/images/icon/compare.png" alt=""> <span>Add to cart</span></a>
                                         </li>
                                         <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
@@ -368,7 +246,7 @@
                                <div class="product__item__pic set-bg id ='image-container"   data-setbg= "/imagess/<%= content.image[0] %> " id='product-image'>
                                 
                                     <ul class="product__hover">
-                                        <li><a href=""><img src="/images/icon/heart.png" alt=""> <span>Add to wishlist</span></a></li>
+                                        <li><a href="" addToWishlist(<%=content._id%>)><img src="/images/icon/heart.png" alt="" > <span>Add to wishlist</span></a></li>
                                         <li><a href=""><img src="/images/icon/compare.png" alt=""> <span>Add to cart</span></a>
                                         </li>
                                         <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
@@ -416,92 +294,14 @@
 
                          <% } %>
                          <% } %>
-
+                         <%}%>
+                    
+ 
 
                         
   
 
-                         <script>//Initial References
-                            let imageContainer = document.getElementById("image-container");
-                            let productImage = document.getElementById("product-image");
-                            let overlay = document.getElementById("overlay");
-                            let mouseOverlay = document.getElementById("mouse-overlay");
-                            
-                            //events object(stores events for touch,mouse)
-                            let events = {
-                              mouse: {
-                                move: "mousemove",
-                              },
-                              touch: {
-                                move: "touchmove",
-                              },
-                            };
-                            
-                            //initially blank
-                            let deviceType = "";
-                            
-                            //Checks for device type
-                            function isTouchDevice() {
-                              try {
-                                //We try to create touch event (it would fail for desktops and throw error)
-                                deviceType = "touch";
-                                document.createEvent("TouchEvent");
-                                return true;
-                              } catch (e) {
-                                deviceType = "mouse";
-                                return false;
-                              }
-                            }
-                            
-                            //hides overlay
-                            const hideElement = () => {
-                              overlay.style.display = "none";
-                              mouseOverlay.style.display = "none";
-                            };
-                            
-                            //Check device so that deviceType variable is set to touch or mouse
-                            isTouchDevice();
-                            
-                            /*In addEventListener we use the events object to set the event so deviceType would be set to touch or mouse since we called 'isTouchDevice()' above
-                            E.g:
-                            if deviceType = "mouse" => the statement for event would be events[mouse].move which equals to mousemove.
-                            if deviceType = "touch" => the statement for event would be events[touch].move which equals to touchstart.
-                            */
-                            
-                            imageContainer.addEventListener(events[deviceType].move, (e) => {
-                              //Try, catch to avoid any errors for touch screens
-                              try {
-                                //pageX and pageY return the position of client's cursor from top left pf screen
-                                var x = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
-                                var y = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
-                              } catch (e) {}
-                              //get image height and width
-                              let imageWidth = imageContainer.offsetWidth;
-                              let imageHeight = imageContainer.offsetHeight;
-                            
-                              //check if mouse goes out of image container
-                              if (
-                                imageWidth - (x - imageContainer.offsetLeft) < 15 ||
-                                x - imageContainer.offsetLeft < 15 ||
-                                imageHeight - (y - imageContainer.offsetTop) < 15 ||
-                                y - imageContainer.offsetTop < 15
-                              ) {
-                                hideElement();
-                              } else {
-                                overlay.style.display = "block";
-                                mouseOverlay.style.display = "inline-block";
-                              }
-                            
-                              var posX = ((x - imageContainer.offsetLeft) / imageWidth).toFixed(4) * 100;
-                              var posY = ((y - imageContainer.offsetTop) / imageHeight).toFixed(4) * 100;
-                            
-                              //set background position to above obtained values
-                              overlay.style.backgroundPosition = posX + "%" + posY + "%";
-                            
-                              //move the overlay with cursor
-                              mouseOverlay.style.top = y + "px";
-                              mouseOverlay.style.left = x + "px";
-                            });</script>
+                         
 
                         <!-- <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item sale">
@@ -982,6 +782,43 @@
         </div>
     </div>
     <!-- Search End -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script>
+    function addToWishlist(proId){
+        event.preventDefault()
+        $.ajax({
+              url:'/add-to-wislist',
+              data:{
+               proId:proId
+              },
+              method:'POST',
+              success: function (response){
+               if(response.length){
+               document.getElementById('badge').innerHTML=response.length
+           }
+           if(response.success){
+            Swal.fire({
+               position: 'top',
+                icon: 'success',
+                 title: 'Product added to wishlist',
+                showConfirmButton: false,
+               timer: 1500
+                     })
+           }else{
+            Swal.fire({
+               position: 'top',
+                icon: 'success',
+                 title: 'Already added',
+                showConfirmButton: false,
+               timer: 1500
+                     })
+           }
+              }
+
+        })
+
+   }
+</script>
 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>

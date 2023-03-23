@@ -10,11 +10,36 @@
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/adminhome/style.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+	
+	<link href="
+    https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css
+    " rel="stylesheet">
 
 	<title>AdminHub</title>
 </head>
 <body>
+    <style>
+        input {
+    flex-grow: 1;
+    padding: 9px 16px;;
+    /* height: 100%; */
+    border: none;
+    background: var(--grey);
+    border-radius: 36px;
+    outline: none;
+    width: 60%;
+    color: var(--dark);
+    margin-left: 30px;
+    
+        }
+    label{
+        margin-left: 45px;
+    }
+    select{
+        margin-left: 45px;
+    }
+        
+    </style>
 
  <!-- section -->
 
@@ -36,7 +61,7 @@
 					<span class="text">Category</span>
 				</a>
 			</li>
-			<li >
+			<li class="active">
 				<a href="products">
 					<i class='bx bxs-doughnut-chart' ></i>
 					<span class="text">Products</span>
@@ -48,7 +73,7 @@
 					<span class="text">User management</span>
 				</a>
 			</li>
-			<li class="active">
+			<li>
 				<a href="order">
 					<i class='bx bxs-message-dots' ></i>
 					<span class="text">order management</span>
@@ -107,96 +132,77 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>Orders</h1>
+					<h1>Product</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Dashboard</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Orders</a>
+							<a class="active" href="#">Products</a>
 						</li>
 					</ul>
 				</div>
-				
+			
 			</div>
 
 
-            <div class="table-data">
+            <div class="table-data" >
 				<div class="order">
 					<div class="head">
-						<h3>Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3> Update Product</h3>
+                        
+						
 					</div>
-				
-        
-        
-          <table>
-						<thead>
-							<tr>
-								<th>User</th>
-                                <th>Order_id</th>
-								
-								
-								<th>TotalPrice</th> 
-								<th>payment</th> 
-							<th>Status</th>
-						
-                            <th>Details</th>
-                        </tr>
-						</thead>
-						<tbody>
-              <% for(i=0;i<orders.length;i++){ %>
-                  <tr>
-								<td>
-									<p><%= orders[i].user.name %></p>
-								</td>
-								<td><p><%= orders[i]._id %></p></td>
-								
-                                <td><p> <%= orders[i].totalPrice  %> </p></td>
-								<td><p><%= orders[i].paymentStatus %></p></td>
-								<td><p><%= orders[i].status %></p></td>
-								
+                    
+                   <div>
+                    <form action="/admin/updateProduct" method="post" enctype="multipart/form-data" class="form-center">
+                        <label  class="mt-3">Name</label>
+                        <div class="form-input"> 
+                           <input type="text"name="name"   class="mt-3"  value="<%= productData.name %>" >
+                       </div>
+                        <label for="" class="mt-4">Description</label>
+                        <div class="form-input"> 
+                          <input type="text"name="discription" class="mt-3" value="<%= productData.discription %>">
+                        </div>
 
-					
-			
-				
-								  
-								
-                                 <td><a href="/admin/order-details?id=<%= orders[i]._id %>"><p><span style="color: crimson;"  class="material-symbols-outlined">
-
-									visibility
-
-								</span></p></a></td>
-
-								<td> </td>
-                                 
-								 
-
-								
-                               </td>
-								
-							</tr>
-				<% } %>
-						
-					
-				
-						</tbody>
-					</table>
+                       <label for="" class="mt-4 ">Price</label>
+                          <div class="form-input"> 
+                             <input type="text" name="price" value="<%= productData.price %>"  class="mt-3">
+                          </div> 
+                       <label for="" class="mt-4">Stock</label>
+                           <div class="form-input"> 
+                             <input type="text"name="stock" value="<%= productData.stock %>" class="mt-3">
+                           </div>
+                       <label for="" class="mt-4">select category</label>
+                           <div class="form-input"> 
+                            <select name="category"  class="mt-3" >
+                                <option value="<%= productData.category._id%>"> <%= productData.category.name %>  </option>
+                                <% for(let res of categoryData){ %>
+                                <option value="<%= res._id %>"><%= res.name %></option>
+                                <% } %>
+                              </select> 
+                            </div>
+  
+                     <label for="" class="mt-4">Image</label>
+                          <div class="form-input"> 
+                               <input type="file" name="image" accept="image/png,image/jpeg"  multiple> 
+                        </div>
+						<input type="hidden" name="id" value="<%= productData._id %>">
+                         <input type="submit" value="Submit" class="mt-4" style="background-color:cornflowerblue;">
+            </form>
+        </div>
+		</div>
+            
+         </div>  
       
 
-				
+			
 			
 		
 		</main>
 		<!-- MAIN -->
 	</section>
-
-	
-	
-	  
-	
 	
 
 	<script src="/adminhome/script.js"></script>

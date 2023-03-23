@@ -94,7 +94,7 @@
                     <div class="header__nav__option ">
                         <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
                         <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
-                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span>0</span></a>
+                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span><%= count %></span></a>
                        
                     </div>
                     
@@ -151,7 +151,7 @@
                         </thead>
                         <tbody >
                            
-                                
+                     <% if(cartProducts.length>0){ %>           
                   <% for(i=0;i<cartProducts.length;i++) { %>
                   
                     <tr id="a<%=  products[i]._id %>">   
@@ -173,9 +173,10 @@
                                 <td class="quantity__item">
                                     <div class="quantity">
                                         <div class="">
-                                            <button class="cart-item-count mr-3 "
+                                            <button class="cart-item-count mr-3 " id="minus"
                       onclick="changeQuantity('<%=userCart._id%>','<%=products[i]._id%>',-1)">-</button>
                     <span id="<%=products[i]._id%>"><%=cartProducts[i].quantity%>
+                        <input type="hidden" value="<%=cartProducts[i].quantity%>" id="quantitynum">
                   </span><button class="cart-item-count ml-3"
                       onclick="changeQuantity('<%=userCart._id%>','<%=products[i]._id%>',1)">+</button>
                                             
@@ -185,7 +186,7 @@
                                     </div>
                                 </td>
                                
-                                  <td class="cart__price" id='he<%=products[i]._id%>'> <%= products[i].price * cartProducts[i].quantity%> </td>
+                                  <td class="cart__price" id='he<%=products[i]._id%>'> ₹<%=  products[i].price * cartProducts[i].quantity%> </td>
                                   <h1 id='prod'></h1>
                                   <h1 id='qnt'></h1>
                                   
@@ -259,6 +260,8 @@
        
        </div>
     <% } %>
+    <% } %>
+    
 
 
 <!-- Shopping Cart Section End -->
@@ -340,6 +343,10 @@
       
       let quantity = parseInt(document.getElementById(proId).innerHTML)
        count=parseInt(count)
+  // Prevent quantity from going below zero
+  if (count < 0 && quantity === 1) {
+    return; // Exit the function if quantity is already zero and count is negative
+  } 
       $.ajax({
         url: '/change-product-quantity',
         data: {
@@ -351,11 +358,9 @@
         method: 'post',
         success: (response) => {
            document.getElementById(proId).innerHTML=response.updatedQuantity 
-           document.getElementById('price').innerHTML=response.totalPrice
-           document.getElementById('he'+proId).innerHTML = response.totalprice
-           
-       
-           
+           document.getElementById('price').innerHTML= '₹'+response.totalPrice
+           document.getElementById('he'+proId).innerHTML ='₹'+ response.totalprice
+         
         }
       })
     }

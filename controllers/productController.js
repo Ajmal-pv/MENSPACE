@@ -10,25 +10,27 @@ const multer = require('multer')
 
 
 // product loading
-const productLoad = async (req, res) => {
+const productLoad = async (req, res,next) => {
  
     const productData = await Product.find({}).populate('category')
     try {
       res.render('products', { productData })
     } catch (error) {
       console.log(error.mesage)
+      next(error)
     }
   }
 // add new product load
-const addProductLoad = async (req, res) => {
+const addProductLoad = async (req,res,next) => {
     try {
       const productData = await Category.find({})
       res.render('newproduct', { productData })
     } catch (error) {
       console.log(error.message)
+      next(error)
     }
   }
-  // const categoryLoad = async (req, res) => {
+  // const categoryLoad = async (req,res,next) => {
   //   // res.render('category')
   //   categoryData = await Category.find({})
   //   singleCategory  = await Category.findById({ _id: req.query.id})
@@ -46,12 +48,13 @@ const addProductLoad = async (req, res) => {
       
     } catch (error) {
       console.log(error.message);
+      next(error)
     }
   }
 
 
 // add new product
-const addProduct = async (req, res) => {
+const addProduct = async (req,res,next) => {
     try {
       let files =[]
       const imageUpload = await (function(){
@@ -73,6 +76,7 @@ const addProduct = async (req, res) => {
       res.redirect('/admin/products')
    } catch (error) {
       console.log(error.message)
+      next(error)
     }
   }
 
@@ -82,19 +86,20 @@ const addProduct = async (req, res) => {
 
   // updateproduct load
 
-const updateProductLoad = async (req, res) => {
+const updateProductLoad = async (req,res,next) => {
     try {
       const productId = req.query.id
       const categoryData = await Category.find({})
       
       const productData = await Product.findOne({ _id: req.query.id }).populate('category')
-      res.render('updateProduct', { productData,categoryData })
+      res.render('updateProduct1', { productData,categoryData })
     } catch (error) {
       console.log(error.message)
+      next(error)
     }
   }
   // update product
-  const updateProduct = async (req, res) => {
+  const updateProduct = async (req,res,next) => {
     try {
   
       let files =[]
@@ -115,17 +120,19 @@ const updateProductLoad = async (req, res) => {
       }
     } catch (error) {
       console.log(error.message)
+      next(error)
     }
      }
   
     // delete product
-     const deleteProduct = async (req, res) => {
+     const deleteProduct = async (req,res,next) => {
     try {
       const product_id = req.query.id
       const deleteData = await Product.findByIdAndDelete({ _id: product_id })
       res.redirect('/admin/products')
     } catch (error) {
       console.log(error.message)
+      next(error)
     }
   }
 

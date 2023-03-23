@@ -19,7 +19,7 @@ const categoryLoad = async (req, res) => {
 
 const addCategoryLoad = async (req, res) => {
   try {
-    res.render('newcategory')
+    res.render('newcategory1')
   } catch (error) {
 
   }
@@ -33,7 +33,7 @@ const addCategory = async (req, res) => {
 
     if (categoryList) {
 
-      res.render('newcategory',{message:"category already exist"})
+      res.render('newcategory1',{message:"category already exist"})
 
 
     }
@@ -70,7 +70,7 @@ const updateCategoryLoad = async (req, res) => {
     user_id = req.query.id
     const categoryData = await Category.findOne({ _id: user_id })
    
-    res.render('updatecategory', { category: categoryData })
+    res.render('updatecategory1', { category: categoryData })
   } catch (error) {
     console.log(error.mesage)
   }

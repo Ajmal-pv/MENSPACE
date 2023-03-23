@@ -96,29 +96,19 @@
     <div class="container">
         
         <div class="cart__discount col-md-4">
-            <% if(userCart.discountprice==0){ %>
+            
             <h6>Discount codes</h6>
             
             
-            <form method="post" action="/coupon" >
-                <input type="text" placeholder="Coupon code" name="code">
+            <form >
+                <input type="text" placeholder="Coupon code" id="couponCode" name="code">
+                <button id="couponSubmit2" type="submit" onclick="deletecoupon()" style="display: none;color: red;" >DELETE</button>
                 
+                <button id="couponSubmit" type="submit" onclick="couponapply()" >APPLY</button>
                 
-                <button type="submit" >Apply</button>
-                
-            </form><% }else if(userCart.discountprice>0){ %>
-                <h6>Discount codes</h6>
-                <form action="/delete-coupon">
-                <input type="text" placeholder="Coupon code" value="<%= coupon %>" name="code">
-                
-                
-              <a href="/delete-coupon"> <button class="btn-dark" >Delete</button></a> 
             </form>
-            <% } %>
-            <% if(typeof message == 'undefined'){ %>
-                <% }else{ %>
-                    <p><%= message %></p>
-                    <% } %>
+            <p id="messagee"></p>
+            
         </div>
         <div class="checkout__form">
             <form action="/checkout" id="checkout" method="post">
@@ -196,16 +186,16 @@
                             <div class="checkout__order__products">Product <span>Total</span></div>
                             <% for(let i=0;i<productData.length;i++) { %>
                             <ul class="checkout__total__products "  >
-                                <li  ><%=productData[i].name%> <span  ><%=productData[i].price%></span></li   >
+                                <li  ><%=productData[i].name %> x <%= userCart.product[i].quantity %> <span  ><%=userCart.product[i].sellingPrice * userCart.product[i].quantity %></span></li   >
            
                             </ul>
                             <% } %>
                             
                             <ul class="checkout__total__all">
-                                <li>Sub Total <span> <%= userCart.totalprice %> </span></li>
-                                <li>Discount amount <span> <%= userCart.discountprice %> </span></li>
-                                <input type="hidden" name="total" value="<%= userCart.totalprice-userCart.discountprice %>">
-                                <li> Total <span> <%= userCart.totalprice-userCart.discountprice %> </span></li>
+                                <li>Sub Total <span id="subtotal"> <%= userCart.totalprice %> </span></li>
+                                <li>Discount amount <span id="discountAmount"> <%= userCart.discountprice %> </span></li>
+                                <input type="hidden" name="total" id="totalHidden" value="<%= userCart.totalprice-userCart.discountprice %>">
+                                <li> Total <span id="total"> <%= userCart.totalprice-userCart.discountprice %> </span></li>
                             </ul>
                             <div class="checkout__input__checkbox">
                                 <label for="payment"  >
@@ -304,6 +294,7 @@
         </form>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 
@@ -451,6 +442,97 @@ function verifyPayment(payment,order){
       
 
     })
+}
+function couponapply(){
+  event.preventDefault()
+  
+  const code= document.getElementById('couponCode').value
+$.ajax({
+    url:'/coupon',
+    method:'post',
+    data:{
+        code:code
+    },
+    success:(jsonresponse)=>{
+        
+        if(jsonresponse.data=='applied'){
+    
+    document.getElementById('subtotal').innerHTML=jsonresponse.updatedCart.totalprice
+    document.getElementById('discountAmount').innerHTML=jsonresponse.updatedCart.discountprice
+    document.getElementById('total').innerHTML = jsonresponse.updatedCart.totalprice - jsonresponse.updatedCart.discountprice
+    document.getElementById('totalHidden').value = jsonresponse.updatedCart.totalprice - jsonresponse.updatedCart.discountprice
+    Swal.fire({
+  position: 'top',
+  icon: 'success',
+  title: 'coupon added. RS '  + jsonresponse.updatedCart.discountprice+ '  reduced from Total Price'    ,
+  showConfirmButton: false,
+  timer: 2500
+})
+    document.getElementById('couponCode').value = jsonresponse.coupon
+document.getElementById('couponSubmit2').style.display = 'block'
+document.getElementById('couponSubmit').style.display = 'none'
+
+
+        }else if (jsonresponse.data=='minimumAmount'){
+            document.getElementById('messagee').innerHTML=jsonresponse.message
+            Swal.fire({
+            position: 'top',
+             icon: 'error',
+            title: jsonresponse.message,
+          showConfirmButton: false,
+            timer: 2000
+                           })
+        }else if(jsonresponse.data=='invalid'){
+            
+            Swal.fire({
+            position: 'top',
+             icon: 'error',
+            title: jsonresponse.message,
+          showConfirmButton: false,
+            timer: 1500
+                           })
+        }
+
+    }
+})
+
+}
+function deletecoupon(){
+    event.preventDefault()
+ 
+    const couponCode = document.getElementById('couponCode').value 
+    $.ajax({
+        url:'/delete-coupon',
+         method:'post',
+         data:{
+           couponCode:couponCode
+         },
+         success:(jsonresponse)=>{
+
+            Swal.fire({
+            position: 'top',
+             icon: 'error',
+            title: 'coupon removed',
+          showConfirmButton: false,
+            timer: 1500
+                           })
+    document.getElementById('subtotal').innerHTML=jsonresponse.cart.totalprice
+    document.getElementById('discountAmount').innerHTML=jsonresponse.cart.discountprice
+    document.getElementById('total').innerHTML = jsonresponse.cart.totalprice - jsonresponse.cart.discountprice
+    document.getElementById('totalHidden').value = jsonresponse.cart.totalprice - jsonresponse.cart.discountprice
+
+
+    document.getElementById('couponCode').value = ''
+document.getElementById('couponSubmit2').style.display = 'none'
+document.getElementById('couponSubmit').style.display = 'block'
+
+  
+    
+
+
+         }
+    })
+
 }
     
 </script>

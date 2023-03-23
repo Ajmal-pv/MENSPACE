@@ -23,7 +23,7 @@
               
               <label for="" class="mt-4">select category</label>
               
-              <select name="category" id=""   class="form-control  " >
+              <select name="category"    class="form-control  " >
                 <option value="<%= productData.category._id%>"> <%= productData.category.name %>  </option>
                 <% for(let res of categoryData){ %>
                 <option value="<%= res._id %>"><%= res.name %></option>

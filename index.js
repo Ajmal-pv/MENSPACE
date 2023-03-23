@@ -1,13 +1,16 @@
 const env = require('dotenv').config()
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://127.0.0.1:27017/MENSPACE")
+
 const express =require("express")
 const app = express();
+const mongoose = require("mongoose")
+mongoose.connect("mongodb://127.0.0.1:27017/MENSPACE")
 const user_route = require("./routes/userRoute")
 const admin_route = require("./routes/adminRoute")
 
 
 const path = require('path')
+
+const errorHandler = require('./errorHandler')
 
 
 

@@ -10,6 +10,7 @@
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/adminhome/style.css">
+	
 	<link href="
     https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css
     " rel="stylesheet">
@@ -17,9 +18,31 @@
 	<title>AdminHub</title>
 </head>
 <body>
+    <style>
+        input {
+    flex-grow: 1;
+    padding: 9px 16px;;
+    /* height: 100%; */
+    border: none;
+    background: var(--grey);
+    border-radius: 36px;
+    outline: none;
+    width: 60%;
+    color: var(--dark);
+    margin-left: 30px;
+    
+        }
+    label{
+        margin-left: 45px;
+    }
+    select{
+        margin-left: 45px;
+    }
+        
+    </style>
 
+ <!-- section -->
 
-	<!-- SIDEBAR -->
     <section id="sidebar">
 		<a href="#" class="brand">
 			<i class='bx bxs-smile'></i>
@@ -38,13 +61,13 @@
 					<span class="text">Category</span>
 				</a>
 			</li>
-			<li>
+			<li class="active">
 				<a href="products">
 					<i class='bx bxs-doughnut-chart' ></i>
 					<span class="text">Products</span>
 				</a>
 			</li>
-			<li  class="active">
+			<li>
 				<a href="user">
 					<i class='bx bxs-message-dots' ></i>
 					<span class="text">User management</span>
@@ -81,16 +104,27 @@
 		</ul>
 	</section>
 
-	<!-- SIDEBAR -->
-
-
-
 	<!-- CONTENT -->
 	<section id="content">
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu' ></i>
-			
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<a href="#" class="notification">
+				<i class='bx bxs-bell' ></i>
+				<span class="num">8</span>
+			</a>
+			<a href="#" class="profile">
+				<img src="img/people.png">
+			</a>
 		</nav>
 		<!-- NAVBAR -->
 
@@ -98,96 +132,60 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>User</h1>
+					<h1>Product</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Dashboard</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">user</a>
+							<a class="active" href="#">Products</a>
 						</li>
 					</ul>
 				</div>
-				
+			
 			</div>
 
 
             <div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Users</h3>
+						<h3> Update Category</h3>
+                        
 						
 					</div>
-				
-        
-        
-          <table>
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>email</th>
-								<th>mobile</th>
-                                <th> action </th>
-							</tr>
-						</thead>
-						<tbody>
-              <% if(userData.length >0){
-                for(let i=0;i<userData.length;i++){
-                  %>
-                  <tr>
-								<td>
-									<p><%= userData[i].name %> </p>
-								</td>
-								<td> <p> <%= userData[i].email %></p></td>
-                                <td> <%= userData[i].mobile %></td>
-                                 <td>   <p><% if(userData[i].is_blocked == 0){%>
-                                        
-										<button onclick="blockUser('<%= userData[i]._id%>')" class="btn btn-success">Active</button>
-										
-                                        <%}else{%>
-                                            
-											<button onclick="blockUser('<%= userData[i]._id%>')" class="btn btn-danger">Blocked</button>
-                                            <%}%></p>  </td>
+                    
+                  
+                    <form action="/admin/updateCategory" method="post" class="form-center">
+                        <label  class="mt-3">Name</label>
+                        <div class="form-input"> 
+                           <input type="text"name="name"   class="mt-3" value="<%= category.name %>" >
+                       </div>
+                        <label for="" class="mt-4">Description</label>
+                        <div class="form-input"> 
+                          <input type="text"name="discription" placeholder="Description"class="mt-3"  value="<%= category.discription %>">
+                        </div>
+                        <input type="hidden" name="id" value="<%= category._id %>">
 
-								
-							</tr>
-							<%
-                }
-              } %>
-						
-							
-						</tbody>
-					</table>
+                         <input type="submit" value="Submit" class="mt-4" style="background-color:cornflowerblue;">
+                         <%if( typeof message != 'undefined'){%>
+                            <p><%= message %></p>
+                            <%}%>
+            </form>
+            
+    
+		</div>
+            
+         </div>  
       
 
-
-				
+			
 			
 		
 		</main>
 		<!-- MAIN -->
 	</section>
 	
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
-	<script>
-          function  blockUser(userId){
-			Swal.fire({
-   title: 'Are you sure?',
-   text: "",
-   icon: 'warning',
-   showCancelButton: true,
-   confirmButtonColor: '#3085d6',
-   cancelButtonColor: '#d33',
-   confirmButtonText: 'Yes, confirm!'
-}).then((result) => {
-   if (result.value) {
-       window.location.href = '/admin/blockUser?id='+userId
-   }
-})
-		  }
-
-		</script>
 
 	<script src="/adminhome/script.js"></script>
 </body>

@@ -82,9 +82,9 @@
             <div class="col-lg-3 col-md-3">
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
-                    <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
-                    <span id="badge"><%=userData.wishList.length%></span>
-                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span ></span></a>
+                    <a href="wishList" id="badge"><img src="/images/icon/heart.png" alt=""><%=userData.wishList.length%></a>
+                    <!-- <span id="badge"><%=userData.wishList.length%></span> -->
+                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span ><%= cartData.product.length %></span></a>
                    
                 </div>
                 
@@ -607,7 +607,7 @@
             </form>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
  
     <script>
        
@@ -622,6 +622,23 @@
                 if(response.length){
                 document.getElementById('badge').innerHTML=response.length
             }
+            if(response.success){
+            Swal.fire({
+               position: 'top',
+                icon: 'success',
+                 title: 'Product added to wishlist',
+                showConfirmButton: false,
+               timer: 1500
+                     })
+           }else{
+            Swal.fire({
+               position: 'top',
+                icon: 'success',
+                 title: 'Already added',
+                showConfirmButton: false,
+               timer: 1500
+                     })
+           }
                }
 
          })

@@ -88,22 +88,7 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu' ></i>
-			<a href="#" class="nav-link">Sales</a>
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" hidden>
-			<label for="switch-mode" class="switch-mode"></label>
-			<a href="#" class="notification">
-				<i class='bx bxs-bell' ></i>
-				<span class="num">8</span>
-			</a>
-			<a href="#" class="profile">
-				<img src="img/people.png">
-			</a>
+			
 		</nav>
 		<!-- NAVBAR -->
 
@@ -118,7 +103,7 @@
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Home</a>
+							<a class="active" href="/admin/home">Home</a>
 						</li>
 					</ul>
 				</div>
@@ -157,9 +142,9 @@
 						
 					</div>
 				</div>
-			</div>
+			<!-- </div>
 		</div>
-			</div>
+			</div> -->
 			
 		
 
@@ -198,6 +183,7 @@
 							<tr>
 								<th>User</th>
 								<th>Date Order</th>
+								<th>product</th>
 								<th>total Price</th>
 								<th>payment Method</th>
 							</tr>
@@ -210,20 +196,24 @@
                                         <p><%=orderSuccess[i].customer.name %></p>
                                     </td>
                                     <td><%= orderSuccess[i].createdDate.toLocaleString() %></td>
+									<td><% for(let j = 0;j < orderSuccess[i].products.length;j++){ %>
+										<%= orderSuccess[i].products[j].productId.name %> x <%= orderSuccess[i].products[j].quantity %>
+									   <br>
+									  <% } %></td>
 									<td><%= orderSuccess[i].totalPrice %></td>
 									<td><%= orderSuccess[i].paymentMethod %></td>
 								<% } %>
 						</tbody>
 					</table>
-				</div>
-			
-				
+			 </div>
+		</div>
+		
                 
-			</div>	
+			
 			
 		</main>
 		<!-- MAIN -->
-	</section>
+</section>
 	<!-- CONTENT -->
 	
 	 
@@ -275,7 +265,7 @@
 					toInput: toInput
 				},
 				success:(jsonresponse)=>{
-			alert(jsonresponse.orderData.length)
+			
             let html=''
 			for(let i=0;i<jsonresponse.orderData.length;i++){
 		   html +=	`

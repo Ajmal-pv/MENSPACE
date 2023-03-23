@@ -26,16 +26,17 @@ const securePassword = async (password) => {
 }
 
 // // admin login
-const loadLogin = async (req, res) => {
+const loadLogin = async (req, res,next) => {
   try {
     res.render('login')
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 
 // //verify login
-const verifyLogin = async (req, res) => {
+const verifyLogin = async (req, res,next) => {
   try {
     const email = req.body.email
     const password = req.body.password
@@ -57,32 +58,69 @@ const verifyLogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
-const loadDashboard = async (req, res) => {
+const loadDashboard = async (req, res,next) => {
   try {
     const userData = await User.findById({ _id: req.session.admin_id })
     const users = await User.find({})
     const orderData = await Order.find({}).sort({createdDate:'desc'})
-    const orderSuccess = await Order.find({paymentStatus:"Charged"})
-    let totalprice=0
+    const orderSuccess = await Order.find({paymentStatus:"Charged",status: "Delivered" })
+    
     let sum=0
     for(i=0;i<orderSuccess.length;i++){
       sum=sum+orderSuccess[i].totalPrice
     }
   const products = await Product.find({}).populate('category')
+  const categoryWise = await Order.aggregate([
+    {
+         $match:{status:"Delivered"}
+    },
+    {
+        $unwind:"$products"
+    },
+    {
+        $lookup:{
+            from:"products",
+            localField:"products.productId",
+            foreignField:"_id",
+            as:"product"
+        }
+    },
+    {
+        $unwind:"$product"
+    },
+    {
+        $group:{
+            _id:"$product.category",
+          //  totalSale:{$sum:"$product.price"}
+          totalSale: {
+            $sum: {
+              $multiply: ["$products.sellingPrice", "$products.quantity"]
+            }
+          }
+        }
+    }
+   
+])
+const circular = categoryWise.map((category)=> category.totalSale)
+
+
   
 
-  res.render('home', { admin: userData, orderData, users, sum, products })
+
+  res.render('home', { admin: userData, orderData, users, sum, products,circular })
     
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
-const salesLoad = async(req,res)=>{
+const salesLoad = async(req,res,next)=>{
   try {
 
-  const orderSuccess = await Order.find({status:"Delivered"}).sort({createdDate:'desc'})
+  const orderSuccess = await Order.find({status:"Delivered"}).sort({createdDate:'desc'}).populate('products.productId')
     const orderDelivered = await Order.find({status:"Delivered"})
     
     const orderCanclled = await Order.find({status:"Cancelled"})
@@ -95,11 +133,12 @@ const salesLoad = async(req,res)=>{
     res.render('salesReport',{orderSuccess,sum,orderDelivered,orderCanclled,})
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
-const SalesFilter = async(req,res)=>{
+const SalesFilter = async(req,res,next)=>{
   try {
-    
+
    const start = req.body.fromInput
    const end = req.body.toInput
   const orderData = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'})
@@ -112,13 +151,15 @@ const SalesFilter = async(req,res)=>{
    res.json(jsonresponse)
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
-const SalesPdf = async(req,res)=>{
+const SalesPdf = async(req,res,next)=>{
   try {
     const start = req.body.start
    const end = req.body.end
-    const orderSuccess = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'})
+    const orderSuccess = await Order.find({ status:"Delivered",createdDate: {$gte:start, $lte:end}} ).sort({createdDate:'desc'}).populate('products.productId')
+    
     const data ={
       orderSuccess:orderSuccess
     }
@@ -141,24 +182,25 @@ const SalesPdf = async(req,res)=>{
             });
             stream.pipe(res);
         });
-// }
-// )
+
  console.log('pdf generated')
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
 // user loading
-const userLoad = async (req, res) => {
+const userLoad = async (req, res,next) => {
   try {
     const userData = await User.find({})
     res.render('user', { userData })
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 // user blocking and unblocking
-const blockUser = async (req, res) => {
+const blockUser = async (req, res,next) => {
   try {
     user_id = req.query.id
     console.log(user_id)
@@ -175,29 +217,32 @@ const blockUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 // category show
-const categoryLoad = async (req, res) => {
+const categoryLoad = async (req, res,next) => {
   try {
     const categoryData = await Category.find({is_delete:false})
     res.render('category', { categoryData })
+  
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 // add new category load
 
-const addCategoryLoad = async (req, res) => {
+const addCategoryLoad = async (req, res,next) => {
   try {
     res.render('newcategory')
   } catch (error) {
-
+    next(error)
   }
 }
 
 // add new category
-const addCategory = async (req, res) => {
+const addCategory = async (req, res,next) => {
   try {
        const name = req.body.name
     const categoryList = await Category.findOne({name:{$regex:'.*'+name+'.*',$options:'i'}})
@@ -221,21 +266,23 @@ const addCategory = async (req, res) => {
     res.redirect('category')}
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 
 // delete category
-const deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res,next) => {
   try {
     user_id = req.query.id
     const userData = await Category.findByIdAndDelete({ _id: user_id })
     res.redirect('/admin/category')
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
 }
 // update Category page
-const updateCategoryLoad = async (req, res) => {
+const updateCategoryLoad = async (req, res,next) => {
   try {
     user_id = req.query.id
     const categoryData = await Category.findOne({ _id: user_id })
@@ -243,29 +290,32 @@ const updateCategoryLoad = async (req, res) => {
     res.render('updatecategory', { category: categoryData })
   } catch (error) {
     console.log(error.mesage)
+    next(error)
   }
 }
 // update category
-const updateCategory = async (req, res) => {
+const updateCategory = async (req, res,next) => {
   try {
     const product_id = req.body.id
     const categoryupdatedData = await Category.findByIdAndUpdate({ _id: product_id }, { $set: { name: req.body.name, discription: req.body.discription } })
     res.redirect('/admin/category')
   } catch (error) {
     console.log(error.mesage)
+    next(error)
   }
 }
 
-const orderLoad = async(req,res)=>{
+const orderLoad = async(req,res,next)=>{
   try {
    const orders= await Order.find({}).populate('user')
      res.render('order',{orders})
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 
 }
-const orderDetails = async(req,res)=>{
+const orderDetails = async(req,res,next)=>{
   try {
     order_id = req.query.id
     const orderData = await Order.findOne({_id:order_id})
@@ -276,9 +326,10 @@ const orderDetails = async(req,res)=>{
     res.render('order-details',{orderData,products})
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
-const statusChange = async(req,res)=>{
+const statusChange = async(req,res,next)=>{
   const staus = req.body.statusChange
   const payment = req.body.paymentChange
   const order_id = req.query.id
@@ -294,6 +345,7 @@ const bannerLoad = async(req,res)=>{
     res.render('banner',{banner})
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
 
@@ -301,16 +353,16 @@ const bannerLoad = async(req,res)=>{
 
 
 
-const newBanner = async(req,res)=>{
+const newBanner = async(req,res,next)=>{
 try {
 
-  res.render('newbanner')
+  res.render('newbanner1')
 } catch (error) {
   console.log(error.message);
 }
 
 }
-const addBanner = async(req,res)=>{
+const addBanner = async(req,res,next)=>{
 try {
   let files =[]
   const imageUpload = await (function(){
@@ -330,11 +382,12 @@ try {
       
 } catch (error) {
   console.log(error.message);
+  next(error)
 }
 
 
 }
-const deleteBanner = async(req,res)=>{
+const deleteBanner = async(req,res,next)=>{
   try {
   
     const id = req.query.id
@@ -345,26 +398,29 @@ const deleteBanner = async(req,res)=>{
 
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
-const couponLoad = async(req,res)=>{
+const couponLoad = async(req,res,next)=>{
   couponData = await Coupon.find({})
   try {
     res.render('coupon',{couponData})
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
 
-const newCoupon = async(req,res)=>{
+const newCoupon = async(req,res,next)=>{
   try {
-    res.render('new-Coupon')
+    res.render('new-Coupon1')
   } catch (error) {
     console.log(error.messge);
+    next(error)
   }
 }
 
-const addCoupon = async(req,res)=>{
+const addCoupon = async(req,res,next)=>{
   try {
       
 
@@ -382,27 +438,30 @@ const addCoupon = async(req,res)=>{
     res.redirect('/admin/coupon')
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
 
-const deleteCoupon =async(req,res)=>{
+const deleteCoupon =async(req,res,next)=>{
   try {
       const id = req.query.id
       const deleteCoupon = await Coupon.findByIdAndDelete({_id:id})
       res.redirect('/admin/coupon')
   } catch (error) {
     console.log(error.message);
+    next(error)
   }
 }
 
 
 // logout
-const logout = async (req, res) => {
+const logout = async (req, res,next) => {
   try {
     req.session.admin_id=""
     res.redirect('/admin')
   } catch (error) {
     console.log(error.mesage)
+    next(error)
   }
 }
 

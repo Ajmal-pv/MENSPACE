@@ -40,7 +40,7 @@ user_route.post('/forget-password', userController.resetPassword)
 
 // product
 
-user_route.get('/shop', userController.shopLoad)
+user_route.get('/shop',userController.shopLoad)
 user_route.get('/category-filter',productController.categoryPage)
 user_route.get('/product-detail', userController.productDetail)
 user_route.post('/add-to-wislist',shopController.addToWishlist)
@@ -48,7 +48,7 @@ user_route.get('/wishList',auth.isLogin,shopController.wishList)
 user_route.get('/delete-from-wishlist',shopController.deleteFromWishlist)
 
 user_route.post('/coupon',shopController.couponpAdd)
-user_route.get('/delete-coupon',shopController.couponDelete)
+user_route.post('/delete-coupon',shopController.couponDelete)
 
 user_route.get('/add-to-cart', auth.isLogin, shopController.addToCart)
 user_route.get('/cartPage', auth.isLogin,shopController.cartPage)

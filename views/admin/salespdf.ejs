@@ -1,24 +1,55 @@
-<h1>MEN FASHION</h1>
-					<table >
-						<thead>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+	<style>
+		table {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+  margin: 0;
+  padding: 0;
+   overflow: auto;
+}
+	</style>
+	<h1 style="font-weight:bolder; text-align:center;">MEN FASHION</h1>
+	<h3>Sales</h3>
+					<table id="table" >
+						<thead style="display: flex;">
 							<tr>
 								<th>User</th>
 								<th>Date Order</th>
+								<th>products</th>
+								
 								<th>total Price</th>
 								<th>payment Method</th>
 							</tr>
 						</thead>
-						<tbody id="tableBody">
+						<tbody style="text-align: center;">
 							<% for(i=0;i<orderSuccess.length;i++){ %>
                                 <tr>
                                     <td>
                                         
                                         <p><%=orderSuccess[i].customer.name %></p>
                                     </td>
-                                    <td><%= orderSuccess[i].createdDate.toLocaleString() %></td>
+                                    <td><%= orderSuccess[i].createdDate.toLocaleDateString() %></td>
+									<td><% for(let j = 0;j < orderSuccess[i].products.length;j++){ %>
+										<%= orderSuccess[i].products[j].productId.name %> x <%= orderSuccess[i].products[j].quantity %>
+									   <br>
+									  <% } %></td>
 									<td><%= orderSuccess[i].totalPrice %></td>
 									<td><%= orderSuccess[i].paymentMethod %></td>
 								<% } %>
 						</tbody>
 					</table>
+</body>
+</html>
+
+
 				

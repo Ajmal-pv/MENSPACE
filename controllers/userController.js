@@ -61,10 +61,10 @@ var otp;
 
 
 // for mail send
-const sendVerifyMail = async(name,email,user_id)=>{
+const sendVerifyMail = async(name,email,user_id,next)=>{
     
 try {
-     otp =  otpGenerator.generate(4, { upperCaseAlphabets: false, specialChars: false });
+     otp =  otpGenerator.generate(4, { specialChars:false,upperCaseAlphabets:false,lowerCaseAlphabets:false });
      console.log(otp);
 
    const transporter = nodemailer.createTransport({
@@ -95,10 +95,11 @@ try {
     
 } catch (error) {
     console.log(error.message);
+    next(error)
 }
 }
 //for reset password
-const sendResetMail = async(name,email,token)=>{
+const sendResetMail = async(name,email,token,next)=>{
     try {
        const transporter = nodemailer.createTransport({
             host:'smtp.gmail.com',
@@ -128,38 +129,44 @@ const sendResetMail = async(name,email,token)=>{
         
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
     }
     
 // loading loadpage
-const loadpage=async(req,res)=>{
+const loadpage=async(req,res,next)=>{
     try {
     const  userData = req.session.user_id
     const bannerData = await Banner.find({})
     const products = await Product.find({})
     if(userData){
         const cart = await Cart.findOne({user:userData})
-        const cartData = cart.product
-        res.render('loadpage',{userData,bannerData,products,cartData})
+        if(cart){
+        let cartData = cart.product
+        res.render('loadpage',{userData,bannerData,products,cartData})}
+        else{
+        res.render('loadpage',{userData,bannerData,products})}
        
     }else{
         res.render('loadpage',{bannerData,products})
     }
     } catch (error) {
         console.log(error.message)
+        next(error)
     }
 }
 
 //loading registration form
-const loadRegister = async(req,res)=>{
+const loadRegister = async(req,res,next)=>{
     try {
         res.render('registration')
     } catch (error) {
-        console.log(error.message)        
+        console.log(error.message)  
+        next(error)      
     }
 }
 // Adding user 
-const insertUser = async(req,res)=>{
+const insertUser = async(req,res,next)=>{
     try {
         const checkEmail = await User.findOne({email:req.body.email})
         const checkNumber = await User.findOne({mobile:req.body.mobile})
@@ -207,13 +214,14 @@ const insertUser = async(req,res)=>{
     }
     } catch (error) {
         console.log(error.message)
+        next(error)
     }
     
     }
 
 
 // verifying mail
-// const verifyMail = async(req,res)=>{
+// const verifyMail = async(req,res,next)=>{
 //   try {
 //     const updateInfo = await User.updateOne({_id:req.query.id},{$set:{ is_verified:1  }})
 
@@ -227,7 +235,7 @@ const insertUser = async(req,res)=>{
 // }
 //verifying mail
   
-const verifyMail = async(req,res)=>{
+const verifyMail = async(req,res,next)=>{
   try {
     const user_id = req.body.id
     const userOtp = req.body.otpvalue
@@ -244,6 +252,7 @@ const verifyMail = async(req,res)=>{
 
   } catch (error) {
     console.log(error.message)
+    next(error)
   }
   
 }
@@ -288,16 +297,17 @@ const verifyMail = async(req,res)=>{
 
 // loading login page
 
-const loginLoad = async(req,res)=>{
+const loginLoad = async(req,res,nex)=>{
     try {
         res.render('login')
         
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 //login verify
-const verifyLogin = async (req,res) => {
+const verifyLogin = async (req,res,next) => {
     
     try {
        
@@ -329,10 +339,11 @@ const verifyLogin = async (req,res) => {
     } catch (error) {
         console.log("verify login catch error");
         console.log(error.message)
+        next(error)
     }
 }
 // get home
-const loadHome = async(req,res)=>{
+const loadHome = async(req,res,next)=>{
     try {
          if(req.session.user_id){
              const userData=await User.findById({_id:req.session.user_id})
@@ -347,32 +358,35 @@ const loadHome = async(req,res)=>{
     } catch (error) {
         
         console.log(error.message)
+        next(error)
     }
     
     }
     // logout
-const userLogout = async(req,res)=>{
+const userLogout = async(req,res,next)=>{
     try {
         req.session.destroy();
         res.redirect('/');
         
     } catch (error) {
         console.log(error.message)
+        next(error)
     }
     
     }
     
 //forget password
-const forgetLoad = async(req,res)=>{
+const forgetLoad = async(req,res,next)=>{
 try {
     res.render('forget')
     
 } catch (error) {
     console.log(error.message)
+    next(error)
 }
 
 }
-const forgetLink = async(req,res)=>{
+const forgetLink = async(req,res,next)=>{
     try {
         const email = req.body.email;
        const userData = await User.findOne({email:email})
@@ -391,10 +405,11 @@ const forgetLink = async(req,res)=>{
        }
     } catch (error) {
        console.log(error.message) 
+       next(error)
     }
 }
 
-const forgetPasswordLoad = async(req,res)=>{
+const forgetPasswordLoad = async(req,res,next)=>{
     try {
         const token = req.query.token;
      const tokenData =await User.findOne({token:token});
@@ -406,10 +421,11 @@ const forgetPasswordLoad = async(req,res)=>{
      }
     } catch (error) {
         console.log(error.message)
+        next(error)
     }
 }
 
-const resetPassword = async(req,res)=>{
+const resetPassword = async(req,res,next)=>{
     try {
         const password = req.body.password
         const user_id = req.body.user_id;
@@ -420,48 +436,211 @@ const resetPassword = async(req,res)=>{
               console.log(updatedData);
     } catch (error) {
        console.log(error.message);
+       next(error)
     }
 }
+
+// const shopePage = async (req, res) => {
+//     try {
+
+//         const category = (req.query.categoryId)
+//         const search = (req.query.search) || "";
+//         const sort = (req.query.sort) || "";
+//         let isRender = false;
+
+//         if (req.query.isRender) {
+//             isRender = true
+//         }
+
+//         const searchData = new String(search).trim()
+
+//         const query = {
+//             is_delete: false,
+//         }
+
+//         let sortQuery = { price: 1 }
+//         if (sort == 'high-to-low') {
+//             sortQuery = { price: -1 }
+//         }
+
+//         if (search) {
+//             query["$or"] = [
+//                 { name: { $regex: "." + searchData + ".", $options: "i" } },
+//                 { description: { $regex: searchData, $options: "i" } },
+//             ];
+//         }
+
+//         if (category) {
+//             query["$or"] = [
+//                 { category: category }
+//             ];
+//         }
+
+
+//         const product = await Product.find(query).sort(sortQuery)
+
+//         const productsPerPage = 5;
+//         const page = req.query.page || 1;
+//         const startIndex = (page - 1) * productsPerPage;
+//         const endIndex = startIndex + productsPerPage;
+//         const pageProducts = product.slice(startIndex, endIndex);
+//         const totalPages = Math.ceil(product.length / productsPerPage);
+//         // -----------Category finding
+//         const categoryData = await Catogery.find({})
+
+//         // ----------------------
+//         let cartCount = 0;
+//         const cartData = await Cart.findOne({ user: req.session.user_id }).populate('product')
+//         if (cartData) {
+//             cartCount = cartData.product.length
+//         } else {
+//             cartCount = 0;
+//         }
+//         // -------------------
+//         let wishListCount = 0;
+//         const wishListData = await WishList.findOne({ user: req.session.user_id }).populate('product')
+//         if (wishListData) {
+//             wishListCount = wishListData.product.length
+//         } else {
+//             wishListCount = 0;
+//         }
+//         // ---------------------
+//         if (isRender == true) {
+//             res.json({
+//                 pageProducts,
+//                 totalPages,
+//                 currentPage: parseInt(page, 10),
+//                 product,
+//                 // cartCount,
+//                 // wishListCount
+//             })
+//         } else {
+//             res.render('shope', {
+//                 pageProducts,
+//                 totalPages,
+//                 currentPage: parseInt(page, 10),
+//                 product,
+//                 cartCount,
+//                 wishListCount,
+//                 categoryData
+
+//             });
+//         }
+
+//     } catch (error) {
+//         console.log(error.message);
+//         console.log("Shope Page Section");
+//         res.render('cacheHandle')
+
+//     }
+// }
+
 //shopLoad
-const shopLoad = async(req,res)=>{
+// const shopLoad = async(req,res,next)=>{
+//     try {
+       
+//         let isRender = false;
+
+//         if (req.query.isRender) {
+//             isRender = true
+//         }
+     
+//         const userData = req.session.user_id || " "
+//         const productList = await Product.find({})
+//         const categorylist = await Category.find({})
+       
+        
+//         if(userData){
+
+            
+//             if (isRender == true) {
+//                 const categoryFilter = req.query.categoryId
+//                 const query = {
+            
+//                 }
+        
+//                 if(categoryFilter){
+//                     query["$or"] = [
+//                         { category: categoryFilter }
+//                     ];
+//                 }
+//                 const product = await Product.find(query)
+//                 res.json({
+//                     // pageProducts,
+//                     // totalPages,
+//                     // currentPage: parseInt(page, 10),
+//                     product,
+//                     userData
+//                     // cartCount,
+//                     // wishListCount
+//                 })
+//             }  else{
+       
+//         res.render('shop',{productList,userData,categorylist})}}
+//         else{
+//             if (isRender == true) {
+//                 res.json({
+//                     // pageProducts,
+//                     // totalPages,
+//                     // currentPage: parseInt(page, 10),
+//                     product,
+//                     // userData
+//                     // cartCount,
+//                     // wishListCount
+//                 })
+//             } else{
+//             res.render('shop',{productList,categorylist})  
+//         }
+//     }
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+
+// }
+const shopLoad = async(req,res,next)=>{
     try {
         const productList = await Product.find({})
         const userData = req.session.user_id
         const categorylist = await Category.find({})
         if(userData){
-        
+        const cartData = await Cart.findOne({user:userData})
        
-        res.render('shop',{productList,userData,categorylist})}
+       
+        res.render('shop',{productList,userData,categorylist,cartData})}
         else{
             res.render('shop',{productList,categorylist})  
         }
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 
 }
-const logoutUser = async(req,res)=>{
+const logoutUser = async(req,res,next)=>{
     try {
         req.session.user_id=""
         res.redirect('/')
     } catch (error) {
        console.log(error.message); 
+       next(error)
     }
 }
 
-const productDetail = async(req,res)=>{
+const productDetail = async(req,res,next)=>{
     try {
      const userData = await User.findById({_id:req.session.user_id})
+     const cartData = await Cart.findOne({user:req.session.user_id})
     const productData = await Product.findById({_id:req.query.id})
    
         
-        res.render('productdetails',{productData,userData})
+        res.render('productdetails',{productData,userData,cartData})
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 
-const userProfile = async(req,res)=>{
+const userProfile = async(req,res,next)=>{
     try {
      const  userid = await req.session.user_id
      
@@ -475,9 +654,10 @@ const userProfile = async(req,res)=>{
         
     } catch (error) {
         console.log(error.message);
+        next(error)
 }
 }
-const userEdit = async(req,res)=>{
+const userEdit = async(req,res,next)=>{
 try {
     const user_id = req.session.user_id
     const userData = await User.findOne({_id:user_id})
@@ -488,9 +668,10 @@ try {
 }
 } catch (error) {
     console.log(error.message);
+    next(error)
 }
 }
-const userEdited= async(req,res)=>{
+const userEdited= async(req,res,next)=>{
     try {
         const userid = req.session.user_id;
         const userData = await User.findByIdAndUpdate({_id:userid},{$set:{name:req.body.name,email:req.body.email,mobile:req.body.mobile,Address:[{address:req.body.address,postcode:req.body.postcode,city:req.body.city,state:req.body.state}]}}) 
@@ -498,10 +679,11 @@ const userEdited= async(req,res)=>{
         
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
 }
 
-const addressPage= async(req,res)=>{
+const addressPage= async(req,res,next)=>{
     try {
       const userid = req.session.user_id
       const userData = await User.findOne({_id:userid})
@@ -515,17 +697,19 @@ const addressPage= async(req,res)=>{
       }
     } catch (error) {
       console.log(error.message);
+      next(error)
     }
   
   
   }
 
-const addAddress = async(req,res)=>{
+const addAddress = async(req,res,next)=>{
    const userData = req.session.user_id
     try {
         res.render('addAddress',{userData})
     } catch (error) {
        console.log(error.message); 
+       next(error)
     }
 }
 
@@ -547,6 +731,7 @@ const addAddressIn = async (req, res) => {
       res.redirect('/manageAddress')
     } catch (error) {
       console.log(error.message);
+      next(error)
     }
   };
  
@@ -561,9 +746,10 @@ const addAddressIn = async (req, res) => {
       res.render('editaddress', { userData, value });
     } catch (error) {
       console.log(error.message);
+      next(error)
     }
   };
-  const addressEdit = async(req,res)=>{
+  const addressEdit = async(req,res,next)=>{
      try {
       const addressid = req.body._id
       const updated = await User.updateOne({_id:req.session.user_id,'Address._id':addressid},
@@ -580,10 +766,11 @@ const addAddressIn = async (req, res) => {
       
      } catch (error) {
         console.log(error.message);
+        next(error)
      }
   }
   
- const deleteAddress = async(req,res)=>{
+ const deleteAddress = async(req,res,next)=>{
     try {
         const userData = req.session.user_id
         const addressid = req.query.id
@@ -594,6 +781,7 @@ const addAddressIn = async (req, res) => {
             res.redirect('/manageAddress')
     } catch (error) {
         console.log(error.message);
+        next(error)
     }
  } 
 

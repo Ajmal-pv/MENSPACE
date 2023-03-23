@@ -149,7 +149,6 @@ const changeQuantity = async (req, res) => {
     const jsonResponse = { updatedQuantity, totalPrice, totalprice };
     res.json(jsonResponse);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal server error" });
     console.log("change quantity section");
   }
@@ -250,14 +249,15 @@ const couponpAdd = async (req, res) => {
 
 
     const couponData = await Coupon.findOne({code:coupon})
-    const minimum= couponData.minPurchase
+    
 
     if (couponData) {
+      const minimum= couponData.minPurchase
       if (cartTotal>minimum) {
         const couponType = couponData.discountType
         const discountAmount = couponData.discountAmount
         if (couponType === 'percentage') {
-          discountPrice = cartTotal * (discountAmount / 100);
+          discountPrice = cartTotal * (discountAmount/100);
         } else if (couponType === 'flat') {
           discountPrice = discountAmount;
         }
@@ -266,19 +266,22 @@ const couponpAdd = async (req, res) => {
           { $set: { discountprice : discountPrice } }
         );
         const updatedCart = await Cart.findOne({ user: userData });
-        // const jsonResponse = { message:'coupon applied',updatedCart };
-        res.render('checkout', { message: 'coupon applied ', userCarts, productData, userData, address, userCart:updatedCart,coupon })
-
+        const jsonResponse = { message:'coupon applied',updatedCart:updatedCart,data:'applied',coupon };
+      
+          res.json(jsonResponse)
 
       } else {
         const need =minimum-cartTotal
-        // const jsonResponse = { message:'you have to purchase rupees ' + need + 'more to avail this coupon',updatedCart };
-        res.render('checkOut', { message: 'you have to purchase rupees ' + need + 'more to avail this coupon', userCarts, productData, userData, address, userCart })
+        const jsonResponse = { message:'you have to purchase rupees ' + need + 'more to avail this coupon',data:'minimumAmount' };
+     
+        res.json(jsonResponse)
       }
 
 
     } else {
-      res.render('checkOut', { message: 'invalid coupon', userCarts, productData, userData, address, userCart })
+     
+      const jsonResponse = { message:'invalid coupon',data:'invalid'}
+      res.json(jsonResponse)
     }
   } catch (error) {
     console.log(error.message);
@@ -287,8 +290,11 @@ const couponpAdd = async (req, res) => {
 const couponDelete = async (req, res) => {
   try {
     const user = req.session.user_id
-    const cart = await Cart.findOneAndUpdate({ user: user }, { discountprice: 0 })
-    res.redirect('/checkout')
+    const cartData = await Cart.findOneAndUpdate({ user: user }, { discountprice: 0 })
+    const cart = await Cart.findOne({ user: user })
+   
+    const jsonresponse={cart,message:'coupon has removed'}
+    res.json(jsonresponse)
 
   } catch (error) {
     console.log(error.message);
@@ -304,7 +310,7 @@ const orderCreating = async (req, res) => {
     const productDetail = cartData.product
        
     
-    console.log(req.body);
+   
     const customerName = req.body.name;
     
     const customerAddress = req.body.address;
@@ -324,6 +330,7 @@ const orderCreating = async (req, res) => {
       phone: customerPhone
     }
     const totalprice = req.body.total
+   
 
 
 
@@ -356,7 +363,7 @@ const orderCreating = async (req, res) => {
       var instance = new Razorpay({key_id:'rzp_test_hrecA2cXP9u9Me', key_secret:'BhAVtj9JW3ZWBPbKwEoRFgDe'})
 
       var options = {
-        amount: cartData.totalprice*100,  // amount in the smallest currency unit
+        amount: orderData.totalPrice*100,  // amount in the smallest currency unit
         currency: "INR",
         receipt: ''+orderData._id
       };
@@ -493,7 +500,7 @@ const
      
       const productId = req.body.proId
       const userId = req.session.user_id
-      const user = await User.findById({ _id: userId })
+      const user = await User.findById({ _id:userId })
 
       const productIndex = user.wishList.findIndex(p => p.productId == productId)
 
@@ -504,15 +511,15 @@ const
        
        length= parseInt(wishlistLength)
        
-     
-        const jsonResponse = {length };
+       
+        const jsonResponse = {length,success:true };
         res.json(jsonResponse);
 
       }
       else{
         let message="already created"
         length=user.wishList.length
-        const jsonResponse = {message,length}
+        const jsonResponse = {message,length,success:false}
         res.json(jsonResponse)
       }
 
