@@ -152,12 +152,25 @@
 				</li>
 	
 			</ul>
+
+			
 			<div class="table-data">
 				
-             <div class="order" style="display: flex;
-			 justify-content: center; height: 600px; width: 600px;">
-			<div style="text-align: center;"><h4> Category Wise Sales </h4><br>
-<canvas id="myChart" width="400" height="400" style="display: block; width: 500px; height: 500px;"></canvas>
+             <div class="order"  style="display: flex; justify-content: center;
+			  height: 500px; width: 500px;">
+			<div ><h4> Category Wise Sales </h4><br>
+          <canvas id="myChart" width="400" height="400" style="display: block; width: 400px; height: 400px;"></canvas>
+           
+
+				</div>
+
+
+             </div>
+			 <div class="order"  style="display: flex; justify-content: center;
+			 height: 500px; width: 500px;">
+			<div ><h4> 	Week Wise Sales </h4><br>
+          
+           <canvas id="barChart" style="width: 500px; height: 415px;" ></canvas>
 
 				</div>
 
@@ -210,6 +223,8 @@
                 
 			</div>	
 			<input type="hidden" value="<%=circular%>" id="circularChart" >
+			<input type="hidden" value="<%= barChart %>" id="barChartValues">
+
 		</main>
 		<!-- MAIN -->
 	</section>
@@ -248,6 +263,32 @@ const myChart = new Chart(ctx, {
   options: {}
 });
 
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script>
+	const weeklyWise = document.getElementById("barChartValues").value.split(',').map(Number)
+	var xValues = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
+	var yValues = [weeklyWise[0],weeklyWise[1], weeklyWise[2], weeklyWise[3],weeklyWise[4],weeklyWise[5],weeklyWise[6]];
+	var barColors = ["orange", "orange","orange","orange","orange","orange","orange"];
+	
+	new Chart("barChart", {
+	  type: "bar",
+	  data: {
+		labels: xValues,
+		datasets: [{
+		  backgroundColor: barColors,
+		  data: yValues
+		}]
+	  },
+	  options: {
+		legend: {display: false},
+		title: {
+		  display: true,
+		  text: "Week wise sales"
+		}
+	  }
+	});
 	</script>
 <!-- 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

@@ -104,13 +104,45 @@ const loadDashboard = async (req, res,next) => {
     }
    
 ])
+
+
+const weeklySales = await Order.aggregate([
+  {$match:{
+      createdDate:{
+          $gte: new Date(new Date().getTime() - (7*24*60*60*1000))
+      },
+      
+      status:"Delivered"
+  }
+  
+},
+{
+  $group:{
+      _id:{
+          $dayOfWeek:'$createdDate'
+      },
+      totalAmount:{
+          $sum:
+              "$totalPrice"  
+      }
+  }
+},{
+  $sort:{
+      _id:1
+  }
+}
+
+])  
+
 const circular = categoryWise.map((category)=> category.totalSale)
+const barChart = weeklySales.map((payment)=> payment.totalAmount) 
+
 
 
   
 
 
-  res.render('home', { admin: userData, orderData, users, sum, products,circular })
+  res.render('home', { admin: userData, orderData, users, sum, products,circular,barChart })
     
   } catch (error) {
     console.log(error.message)
