@@ -348,8 +348,14 @@ const loadHome = async(req,res,next)=>{
          if(req.session.user_id){
              const userData=await User.findById({_id:req.session.user_id})
              const bannerData = await Banner.find({})
-             const cartData = await Cart.findOne({user:req.session.user_id}) 
-             res.render('home',{bannerData,cartData})
+             const cartData = await Cart.findOne({user:req.session.user_id})
+             let cartCount
+             if(cartData){
+                 cartCount=cartData.length
+             }else{
+                cartCount=0
+             } 
+             res.render('home',{bannerData,cartCount})
         }else{
         res.redirect('/login')
          }
