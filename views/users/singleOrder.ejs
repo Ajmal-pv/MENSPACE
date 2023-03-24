@@ -191,6 +191,305 @@
                  </tbody>
                  
              </table>
+             <section class="vh-100" style="background-color: #8c9eff;">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12">
+                            <div class="card card-stepper text-black" style="border-radius: 16px;">
+                                <!-- ---------------- -->
+                                <div>
+                                    <table class="table ">
+                                        <thead class=" text-center  " style="background-color: #a0b1be;">
+                                            <tr>
+                                                <th scope="col" class="pl-5 ">Product Name</th>
+                                                <th scope="col" class="pl-5 ">Product</th>
+                                                <th scope="col" class="pl-4">Quantity</th>
+                                                <th scope="col" class="pl-5">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center ">
+                                            <% for(let i of productData) {%>
+                                                <tr class="">
+                                                    <td class="pl-5 pt-5 mt-5">
+                                                        <h4>
+                                                            <%=i.productId.name%>
+                                                        </h4>
+                                                    </td>
+                                                    <td class="pl-5"><img width="80px" height="80px"
+                                                            src="/productimages/<%=i.productId.image[0]%>"
+                                                            alt=""></td>
+                                                    <td class="pl-5 pt-5 mt-5">
+                                                        <h4>
+                                                            <%=i.quantity%>
+                                                        </h4>
+                                                    </td>
+
+                                                    <td class="pl-5 pt-5 mt-5">
+                                                        <h4>
+                                                            <%=i.productId.price%>
+                                                        </h4>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- ------------------------- -->
+                                <div class="card-body p-5">
+                                    <% if (orderData.status=="Cancelled" ){ %>
+                                        <h2 class="text-danger">Order Canceled </h2>
+
+                                        <ul id="progressbar-2"
+                                            class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                            <li class="step0  text-center" id="step1"></li>
+                                            <li class="step0  text-center" id="step2"></li>
+                                            <li class="step0  text-center" id="step3"></li>
+                                            <li class="step0   text-muted text-center" id="step4"></li>
+                                        </ul>
+                                        <%} else if(orderData.status=="returneProcessing" ) {%>
+
+                                            <h2 class="text-danger"> Return Processing </h2>
+                                            <h6>Please Wait for Approvel</h6>
+                                            <ul id="progressbar-2"
+                                                class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                <li class="step0 active dactive text-center" id="step1"></li>
+                                                <li class="step0  active dactive text-center" id="step2"></li>
+                                                <li class="step0 active dactive text-center" id="step3"></li>
+                                                <li class="step0  active text-muted text-center" id="step4">
+                                                </li>
+                                            </ul>
+
+                                            <% }else if (orderData.status=="returnApproved" ) {%>
+                                                <h2 class="text-success"> Order Returned </h2>
+                                                <h6>Please Puchase Again</h6>
+
+                                                <ul id="progressbar-2"
+                                                    class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                    <li class="step0 active dactive text-center" id="step1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                            height="25" fill="red" class="bi bi-x"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+                                                    </li>
+
+
+                                                    <li class="step0  active dactive text-center" id="step2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                            height="25" fill="red" class="bi bi-x"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+
+                                                    </li>
+                                                    <li class="step0 active dactive text-center" id="step3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                            height="25" fill="red" class="bi bi-x"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+
+                                                    </li>
+                                                    <li class="step0  active text-muted text-center" id="step4">
+                                                    </li>
+                                                </ul>
+                                                <% }else if (orderData.status=="returnRejucted" ) {%>
+                                                    <h2 class="text-danger"> Return Rejucted </h2>
+                                                    <h6></h6>
+                                                    <ul id="progressbar-2"
+                                                        class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                        <li class="step0 active dactive text-center" id="step1">
+                                                        </li>
+                                                        <li class="step0  active dactive text-center"
+                                                            id="step2"></li>
+                                                        <li class="step0 active dactive text-center" id="step3">
+                                                        </li>
+                                                        <li class="step0  active text-muted text-center"
+                                                            id="step4"></li>
+                                                    </ul>
+                                                    <% }else if(orderData.status=="orderd" ) { %>
+                                                        <ul id="progressbar-2"
+                                                            class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                            <li class="step0 active dactive text-center"
+                                                                id="step1"></li>
+                                                            <li class="step0  text-center" id="step2"></li>
+                                                            <li class="step0  text-center" id="step3"></li>
+                                                            <li class="step0   text-muted text-center"
+                                                                id="step4"></li>
+                                                        </ul>
+
+                                                        <%} else if (orderData.status=="shipped" ) { %>
+                                                            <ul id="progressbar-2"
+                                                                class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                                <li class="step0 active dactive text-center"
+                                                                    id="step1"></li>
+                                                                <li class="step0  active dactive text-center"
+                                                                    id="step2"></li>
+                                                                <li class="step0  text-center" id="step3"></li>
+                                                                <li class="step0   text-muted text-center"
+                                                                    id="step4"></li>
+                                                            </ul>
+                                                            <%} else if (orderData.status=="outOfDelivery" ) {%>
+                                                                <ul id="progressbar-2"
+                                                                    class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                                    <li class="step0 active dactive text-center"
+                                                                        id="step1"></li>
+                                                                    <li class="step0  active dactive text-center"
+                                                                        id="step2"></li>
+                                                                    <li class="step0 active dactive text-center"
+                                                                        id="step3"></li>
+                                                                    <li class="step0   text-muted text-center"
+                                                                        id="step4"></li>
+                                                                </ul>
+                                                                <%} else if (orderData.status=="deliverd" ) {%>
+                                                                    <ul id="progressbar-2"
+                                                                        class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                                                        <li class="step0 active dactive text-center"
+                                                                            id="step1"></li>
+                                                                        <li class="step0  active dactive text-center"
+                                                                            id="step2"></li>
+                                                                        <li class="step0 active dactive text-center"
+                                                                            id="step3"></li>
+                                                                        <li class="step0  active text-muted text-center"
+                                                                            id="step4"></li>
+                                                                    </ul>
+                                                                    <%}%>
+
+
+                                                                        <div
+                                                                            class="d-flex justify-content-between">
+                                                                            <div
+                                                                                class="d-lg-flex align-items-center">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="25" height="25"
+                                                                                    fill="currentColor"
+                                                                                    class="bi bi-clipboard-check"
+                                                                                    viewBox="0 0 16 16">
+                                                                                    <path fill-rule="evenodd"
+                                                                                        d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                                                    <path
+                                                                                        d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                                                                                    <path
+                                                                                        d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                                                                </svg>
+
+                                                                                <div class="pl-3">
+                                                                                    <p class="fw-bold mb-1">
+                                                                                        Order</p>
+                                                                                    <p class="fw-bold mb-0">
+                                                                                        Processed</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="d-lg-flex align-items-center">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="25" height="25"
+                                                                                    fill="currentColor"
+                                                                                    class="bi bi-box"
+                                                                                    viewBox="0 0 16 16">
+                                                                                    <path
+                                                                                        d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+                                                                                </svg>
+                                                                                <div class="pl-3">
+                                                                                    <p class="fw-bold mb-1">
+                                                                                        Order</p>
+                                                                                    <p class="fw-bold mb-0">
+                                                                                        Shipped</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="d-lg-flex align-items-center">
+                                                                                <!-- <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i> -->
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="25" height="25"
+                                                                                    fill="currentColor"
+                                                                                    class="bi bi-truck"
+                                                                                    viewBox="0 0 16 16">
+                                                                                    <path
+                                                                                        d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                                                                </svg>
+                                                                                <div class="pl-3">
+                                                                                    <p class="fw-bold mb-1">Out
+                                                                                    </p>
+                                                                                    <p class="fw-bold mb-0">Of
+                                                                                        Delivery</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="d-lg-flex align-items-center">
+
+
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="25" height="25"
+                                                                                    fill="currentColor"
+                                                                                    class="bi bi-house"
+                                                                                    viewBox="0 0 16 16">
+                                                                                    <path
+                                                                                        d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
+                                                                                </svg>
+
+                                                                                <div class="pl-3">
+                                                                                    <p class="fw-bold mb-1">
+                                                                                        Order</p>
+                                                                                    <p class="fw-bold mb-0">
+                                                                                        Arrived</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                </div>
+
+                            </div>
+                            <%if(orderData.status=="orderd" || orderData.status=="shipped" ||
+                                orderData.status=="outOfDelivery" ) {%>
+                                <div class="d-flex justify-content-center mt-3">
+
+
+                                    <button class="btn-outline-danger" onclick="showPopup()">Cancel
+                                        Order</button>
+
+                                    <div id="popup" style="display:none;">
+                                        <input type="text" id="cancelReason" required>
+                                        <button onclick="orderCancel('<%=orderData._id%>')">submit</button>
+                                    </div>
+
+
+                                </div>
+
+
+                                <%} else if(orderData.status=="deliverd" ) { %>
+                                    <div class="d-flex justify-content-center mt-3">
+
+
+
+
+                                        <button class="btn-outline-danger" onclick="showPopup()">Return
+                                            Order</button>
+
+
+                                        <div class="ml-5">
+                                            <div id="popup" style="display:none;">
+                                                <br>
+                                                <div class="w-50 h-100">
+                                                    <input type="text" id="returnReason"
+                                                        placeholder="Plese enter the Reason of Return" required>
+                                                    <button class="mt-4" onclick="orderReturn('<%=orderData._id%>')">
+                                                        submit</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <%}%>
+                        </div>
+                    </div>
+                </div>
+            </section
          </div>
          <div class="row">
              <div class="col-lg-6 col-md-6 col-sm-6">

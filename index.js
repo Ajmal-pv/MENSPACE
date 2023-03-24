@@ -2,8 +2,9 @@ const env = require('dotenv').config()
 
 const express =require("express")
 const app = express();
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://127.0.0.1:27017/MENSPACE")
+// const mongoose = require("mongoose")
+// mongoose.connect("mongodb://127.0.0.1:27017/MENSPACE")
+const dbConfig = require('./config/config')
 const user_route = require("./routes/userRoute")
 const admin_route = require("./routes/adminRoute")
 
