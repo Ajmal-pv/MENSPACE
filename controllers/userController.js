@@ -145,7 +145,8 @@ const loadpage=async(req,res,next)=>{
         let cartData = cart.product
         res.render('loadpage',{userData,bannerData,products,cartData})}
         else{
-        res.render('loadpage',{userData,bannerData,products})}
+            cartData=0
+        res.render('loadpage',{userData,bannerData,products,cartData})}
        
     }else{
         res.render('loadpage',{bannerData,products})
@@ -349,13 +350,14 @@ const loadHome = async(req,res,next)=>{
              const userData=await User.findById({_id:req.session.user_id})
              const bannerData = await Banner.find({})
              const cartData = await Cart.findOne({user:req.session.user_id})
-             let cartCount
-             if(cartData){
+             console.log(cartData);
+             let cartCount = 0;
+             if(cartData.length>0){
                  cartCount=cartData.length
              }else{
                 cartCount=0
              } 
-             res.render('home',{bannerData,cartCount})
+             res.render('home',{bannerData,cartCount:cartCount})
         }else{
         res.redirect('/login')
          }
