@@ -22,9 +22,25 @@
   transform: scale(1.5);
   cursor: zoom-out;
 }
-
-
+  
+figure.zoom {
+  background-position: 50% 50%;
+  position: relative;
+  width: 500px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+figure.zoom img:hover {
+  opacity: 0;
+}
+figure.zoom img {
+  transition: opacity .5s;
+  display: block;
+  width: 100%;
+}
+ 
 </style>
+
 <header class="header">
        
     <div class="container">
@@ -82,9 +98,9 @@
             <div class="col-lg-3 col-md-3">
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
-                    <a href="wishList" id="badge"><img src="/images/icon/heart.png" alt=""><%=userData.wishList.length%></a>
-                    <!-- <span id="badge"><%=userData.wishList.length%></span> -->
-                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span ><%= cartData.product.length %></span></a>
+                    <a href="wishList" id="badge"><img src="/images/icon/heart.png" alt=""><%=count%></a>
+                   
+                    <a href="cartPage"><img src="/images/icon/cart.png" alt=""><%= cartCount %></a>
                    
                 </div>
                 
@@ -123,25 +139,25 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%= productData.image[0]  %>">
+                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%=productData.image[0]%>">
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%= productData.image[1]  %>">
+                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%=productData.image[1]%>">
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%= productData.image[2]  %>">
+                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%=productData.image[2]%>">
                                     </div>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%= productData.image[3]  %>">
+                                    <div class="product__thumb__pic set-bg" data-setbg="/imagess/<%=productData.image[3]%>">
                                         
                                     </div>
                                 </a>
@@ -152,26 +168,26 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                 <div class="product__details__pic__item"  >
-                                    <div class="product__details__pic__item" id="image-zoom">
-                                        <img src="/imagess/<%= productData.image[0]%>" alt="">
-                                      </div>
+            
+                                      <figure class="zoom" onmousemove="zoom(event)" style="background-image: url(/imagess/<%=productData.image[0]%>)">
+                                        <img src="/imagess/<%= productData.image[0]%>" />
+                                      </figure>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
-                                <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[1]%>" alt="">
-                                </div>
+                                <figure class="zoom" onmousemove="zoom(event)" style="background-image: url(/imagess/<%=productData.image[1]%>)">
+                                    <img src="/imagess/<%= productData.image[1]%>" />
+                                </figure>
                             </div>
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
-                                <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[2]%>" alt="">
-                                </div>
+                                <figure class="zoom" onmousemove="zoom(event)" style="background-image: url(/imagess/<%=productData.image[2]%>)">
+                                    <img src="/imagess/<%= productData.image[2]%>" />
+                                </figure>
                             </div>
                             <div class="tab-pane" id="tabs-4" role="tabpanel">
-                                <div class="product__details__pic__item" id="image-zoom">
-                                    <img src="/imagess/<%= productData.image[3]%>" alt="">
-                                
-                                </div>
+                                <figure class="zoom" onmousemove="zoom(event)" style="background-image: url(/imagess/<%=productData.image[3]%>)">
+                                    <img src="/imagess/<%= productData.image[3]%>" />
+                                </figure>
                             </div>
                         </div>
                     </div>
@@ -644,30 +660,20 @@
          })
 
     }
+    function zoom(e){
+  var zoomer = e.currentTarget;
+  e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX
+  e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX
+  x = offsetX/zoomer.offsetWidth*100
+  y = offsetY/zoomer.offsetHeight*100
+  zoomer.style.backgroundPosition = x + '% ' + y + '%';
+}
 
-     
-     const imageZoom = document.querySelector('#image-zoom');
-let posX, posY, mouseX, mouseY, scale = 1;
 
-imageZoom.addEventListener('mousemove', e => {
-  let rect = imageZoom.getBoundingClientRect();
-  mouseX = e.clientX - rect.left;
-  mouseY = e.clientY - rect.top;
-  posX = (mouseX / imageZoom.offsetWidth) * 100;
-  posY = (mouseY / imageZoom.offsetHeight) * 100;
-  imageZoom.querySelector('img').style.transform = `scale(${scale}) translate(-${posX}%, -${posY}%)`;
-});
 
-imageZoom.addEventListener('mousedown', e => {
-  if (e.button !== 0) return;
-  scale = 2;
-  imageZoom.querySelector('img').style.transform = `scale(${scale}) translate(-${posX}%, -${posY}%)`;
-});
 
-imageZoom.addEventListener('mouseup', () => {
-  scale = 1;
-  imageZoom.querySelector('img').style.transform = `scale(${scale}) translate(-${posX}%, -${posY}%)`;
-});
+
+ 
 
 
     </script>

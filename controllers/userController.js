@@ -145,7 +145,7 @@ const loadpage=async(req,res,next)=>{
         let cartData = cart.product
         res.render('loadpage',{userData,bannerData,products,cartData})}
         else{
-            cartData=0
+          let cartData=0
         res.render('loadpage',{userData,bannerData,products,cartData})}
        
     }else{
@@ -607,17 +607,40 @@ const resetPassword = async(req,res,next)=>{
 // }
 const shopLoad = async(req,res,next)=>{
     try {
-        const productList = await Product.find({})
+        const sort = req.query.sort;
+       
+        let query ={
+
+        }
+
+        var sortValue = 1
+        if(sort == "high-to-low"){
+           sortValue = -1;
+        }
+       const productList = await Product.find({}).sort({price:sortValue})
+        console.log(productList[0].image[0]);
         const userData = req.session.user_id
         const categorylist = await Category.find({})
-        if(userData){
-        const cartData = await Cart.findOne({user:userData})
-       
-       
-        res.render('shop',{productList,userData,categorylist,cartData})}
-        else{
-            res.render('shop',{productList,categorylist})  
+        const cartData = await Cart.findOne({user:req.session.user_id})
+
+        if(req.query.isRender){
+            res.json({
+                productList,
+                userData,
+                categorylist,
+                cartData
+            })
+
+        }else{
+            if(userData){
+                res.render('shop',{productList,userData,categorylist,cartData})}
+                else{
+                    res.render('shop',{productList,categorylist})  
+                }
         }
+
+
+      
     } catch (error) {
         console.log(error.message);
         next(error)
@@ -636,12 +659,26 @@ const logoutUser = async(req,res,next)=>{
 
 const productDetail = async(req,res,next)=>{
     try {
-     const userData = await User.findById({_id:req.session.user_id})
+     const userData = await User.findOne({_id:req.session.user_id})
+     let count = 0
+     if(userData){
+        if(userData.wishList.length>0){
+            count = userData.wishList.length
+        }else{
+           count = 0;
+        }
+     }
+    
+     
      const cartData = await Cart.findOne({user:req.session.user_id})
+     let cartCount =0
+     if(cartData){
+        cartCount = cartData.product.length
+     }
     const productData = await Product.findById({_id:req.query.id})
    
         
-        res.render('productdetails',{productData,userData,cartData})
+        res.render('productdetails',{productData,userData,cartData,count,cartCount})
     } catch (error) {
         console.log(error.message);
         next(error)

@@ -170,12 +170,11 @@ const deleteCartProduct = async (req, res) => {
     const cartSave= await CartData.save()
     const cartDetails = await Cart.findOne({user:userid})
     const cartTotal=cartDetails.totalprice
+    const cartLength = cartDetails.length
 
 
-    const jsonResponse ={cartDetails,cartTotal}
+    const jsonResponse ={cartDetails,cartTotal,cartLength}
     res.json(jsonResponse)
-    
-
     
 
   } catch (error) {
