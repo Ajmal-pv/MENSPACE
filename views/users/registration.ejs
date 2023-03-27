@@ -41,7 +41,7 @@
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="form3Example1cg">Name</label>
-                  <input type="text" name="name" id="form3Example1cg" class="form-control form-control-lg" required/>
+                  <input type="text" name="name" id="form3Example1cg" class="form-control form-control-lg" required />
                   
                 </div>
 
@@ -52,19 +52,19 @@
                 </div>
                 <div class="form-outline mb-4">
                     <label class="form-label" for="form3Example3cg">Mobile number</label>
-                  <input type="text"  name="mobile" id="mobile" class="form-control form-control-lg" required />
+                  <input type="text"  name="mobile" id="mobile" class="form-control form-control-lg" required placeholder="Enter your 10 digit mobilenumber" />
                   
                 </div>
 
                 <div class="form-outline mb-4">
                     <label class="form-label" for="form3Example4cg">Password</label>
-                  <input type="password" name="password" id="password" class="form-control form-control-lg" required/>
+                  <input type="password" name="password" id="password" class="form-control form-control-lg"  required/>
                   
                 </div>
 
                 <div class="form-outline mb-4">
-                  <label class="form-label" for="form3Example4cdg">Repeat your password</label>
-                  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control form-control-lg" required />
+                  <label class="form-label" for="form3Example4cdg">Confirm your password</label>
+                  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control form-control-lg"  required />
                   
                 </div>
 <!-- 
@@ -91,6 +91,22 @@
                     class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" id="check">Register</button>
                 </div>
                 <script>
+                  document.getElementById("mobile").addEventListener("input", function () {
+                   var mobilenumber = document.getElementById("mobile").value;
+      
+                   if (mobilenumber.trim().length < 10) {
+                   document.getElementById("mobile").setCustomValidity("Mobile Digits less than 10");
+                   console.log("less than 10")
+                   } else if (mobilenumber.trim().length > 10) {
+                   document.getElementById("mobile").setCustomValidity("Mobile Digits greater than 10");
+                    } else {
+                   document.getElementById("mobile").setCustomValidity("");
+                     }
+                      });
+
+
+
+
                   document.getElementById("confirmPassword").addEventListener("input", function() {
                   console.log("confirmPass");
                     var password = document.getElementById("password").value;

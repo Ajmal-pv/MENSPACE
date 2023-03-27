@@ -1,4 +1,9 @@
 <%- include("../layouts/userHeader") %>
+
+<style>
+    
+</style>
+
  
        <!-- Page Preloder
     <div id="preloder">
@@ -8,30 +13,15 @@
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__option">
-            <div class="offcanvas__links">
-                <a href="./login.ejs">Sign in</a>
-                <a href="#">FAQs</a>
-            </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
-        </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
+       
+        <!-- <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch"><img src="/iamges/icon/search.png" alt=""></a>
+            <a href="#"><img src="/images/icon/heart.png" alt=""></a>
+            <a href="#"><img src="/images/icon/cart.png" alt=""> <span></span></a>
+           
+        </div> -->
         <div id="mobile-menu-wrap"></div>
-        <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
-        </div>
+        
     </div>
     <!-- Offcanvas Menu End -->
 
@@ -92,9 +82,12 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="/images/icon/search.png" alt=""></a>
-                        <a href="wishList"><img src="/images/icon/heart.png" alt=""></a>
-                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span class="badge-light"><%= cartData.length %></span></a>
+                    
+                       
+                        <a href="wishList"><img  src="/images/icon/heart.png" alt=""><span  class="badge-light"><%= wishlist %></span></a>
+                        <a href="cartPage"><img src="/images/icon/cart.png" alt=""> <span class="badge-light"><%= cartlength %></span></a> 
+                      
+                      
                        
                     </div>
                     
@@ -114,7 +107,10 @@
             
         <div class="hero__slider owl-carousel">
             <% for(j=0;j<bannerData.length;j++) {%>
-            <div class="hero__items set-bg" data-setbg="/imagess/<%= bannerData[j].image[0] %>">
+
+        
+            <div  class="hero__items set-bg "  data-setbg="/imagess/<%= bannerData[j].image[0] %>">
+            
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
@@ -134,8 +130,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            
             <% } %>
+     </div>
+    </div>
             
             <!-- <div class="hero__items set-bg" data-setbg="">
                 <div class="container">

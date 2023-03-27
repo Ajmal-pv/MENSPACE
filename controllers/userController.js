@@ -137,19 +137,28 @@ const sendResetMail = async(name,email,token,next)=>{
 const loadpage=async(req,res,next)=>{
     try {
     const  userData = req.session.user_id
+    const user = await User.findOne({_id:userData})
     const bannerData = await Banner.find({})
     const products = await Product.find({})
     if(userData){
         const cart = await Cart.findOne({user:userData})
-        if(cart){
-        let cartData = cart.product
-        res.render('loadpage',{userData,bannerData,products,cartData})}
-        else{
-          let cartData=0
-        res.render('loadpage',{userData,bannerData,products,cartData})}
+        let cartlength=0
+        if(cart.product){
+           cartlength = cart.product.length
+          }
+        
+          let wishlist=0
+          if(user.wishList.length){
+              wishlist = user.wishList.length
+              
+          }
+        
+        res.render('loadpage',{userData,bannerData,products,cartlength,wishlist})
        
     }else{
-        res.render('loadpage',{bannerData,products})
+        let cartlength=0
+        let wishlist=0
+        res.render('loadpage',{bannerData,products,cartlength,wishlist})
     }
     } catch (error) {
         console.log(error.message)
@@ -343,33 +352,7 @@ const verifyLogin = async (req,res,next) => {
         next(error)
     }
 }
-// get home
-const loadHome = async(req,res,next)=>{
-    try {
-         if(req.session.user_id){
-             const userData=await User.findById({_id:req.session.user_id})
-             const bannerData = await Banner.find({})
-             const cartData = await Cart.findOne({user:req.session.user_id})
-             console.log(cartData);
-             let cartCount = 0;
-             if(cartData.length>0){
-                 cartCount=cartData.length
-             }else{
-                cartCount=0
-             } 
-             res.render('home',{bannerData,cartCount:cartCount})
-        }else{
-        res.redirect('/login')
-         }
-        
-        
-    } catch (error) {
-        
-        console.log(error.message)
-        next(error)
-    }
-    
-    }
+
     // logout
 const userLogout = async(req,res,next)=>{
     try {
@@ -618,8 +601,9 @@ const shopLoad = async(req,res,next)=>{
            sortValue = -1;
         }
        const productList = await Product.find({}).sort({price:sortValue})
-        console.log(productList[0].image[0]);
+        
         const userData = req.session.user_id
+        const user = await User.findOne({_id:userData})
         const categorylist = await Category.find({})
         const cartData = await Cart.findOne({user:req.session.user_id})
 
@@ -628,19 +612,31 @@ const shopLoad = async(req,res,next)=>{
                 productList,
                 userData,
                 categorylist,
-                cartData
-            })
-
+                cartData,
+                cartlength,
+                wishlist
+            })}else{
+        if(userData){
+            const cart = await Cart.findOne({user:userData})
+            let cartlength=0
+            if(cart.product){
+               cartlength = cart.product.length
+              }
+            
+              let wishlist=0
+              if(user.wishList.length){
+                  wishlist = user.wishList.length
+                  
+              }
+              
+            
+              res.render('shop2',{productList,userData,categorylist,cartData,cartlength,wishlist})
+           
         }else{
-            if(userData){
-                res.render('shop',{productList,userData,categorylist,cartData})}
-                else{
-                    res.render('shop',{productList,categorylist})  
-                }
-        }
-
-
-      
+            let cartlength=0
+            let wishlist=0
+            res.render('shop2',{productList,categorylist,cartlength,wishlist})
+        }} 
     } catch (error) {
         console.log(error.message);
         next(error)
@@ -659,26 +655,33 @@ const logoutUser = async(req,res,next)=>{
 
 const productDetail = async(req,res,next)=>{
     try {
-     const userData = await User.findOne({_id:req.session.user_id})
-     let count = 0
-     if(userData){
-        if(userData.wishList.length>0){
-            count = userData.wishList.length
-        }else{
-           count = 0;
-        }
-     }
+     const userData = req.session.user_id
+     const productData = await Product.findById({_id:req.query.id})
     
-     
-     const cartData = await Cart.findOne({user:req.session.user_id})
-     let cartCount =0
-     if(cartData){
-        cartCount = cartData.product.length
-     }
-    const productData = await Product.findById({_id:req.query.id})
-   
+
+     if(userData){
+        const user = await User.findOne({_id:userData})
+        const cart = await Cart.findOne({user:userData})
+        let cartlength=0
+        if(cart.product){
+           cartlength = cart.product.length
+          }
         
-        res.render('productdetails',{productData,userData,cartData,count,cartCount})
+          let wishlist=0
+          if(user.wishList.length){
+              wishlist = user.wishList.length
+              
+          }
+          
+        
+          res.render('productdetails',{productData,userData,cartlength,wishlist})
+       
+    }else{
+        let cartlength=0
+        let wishlist=0
+        res.render('productdetails',{productData,userData,cartlength,wishlist})
+    } 
+    
     } catch (error) {
         console.log(error.message);
         next(error)
@@ -838,7 +841,7 @@ module.exports = {
     verifyMail,
     loginLoad,
     verifyLogin,
-    loadHome,
+   
     forgetLoad,
     forgetLink,
     forgetPasswordLoad,

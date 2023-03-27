@@ -136,7 +136,7 @@
  <div class="row">
      <div class="col-lg-12">
          <div class="shopping__cart__table">
-             <table>
+             <table id="wishlist1">
                  <thead>
                      <tr>
                          <th>Product</th>
@@ -148,7 +148,7 @@
                  <% for(let i=0;i<user.wishList.length;i++){
                      %>
                  <tbody>
-                     <tr>
+                     <tr id="a<%=user.wishList[i].productId._id%>">
                          
            
                          
@@ -180,7 +180,7 @@
                           
                            
                            
-                       <td  class="cart__close"> <a href="/delete-from-wishlist?id=<%=user.wishList[i].productId._id %>"><i class="fa fa-close"></i></td></a>
+                       <td  class="cart__close"> <a href="/delete-from-wishlist?id=<%=user.wishList[i].productId._id %>" onclick="removeFromWishlist('<%=user.wishList[i].productId._id %>')"  ><i class="fa fa-close"></i></a></td>
                        
                      </tr>
                      
@@ -207,7 +207,7 @@
 
  <%}else{%>
 
-<div class="container-fluid  mt-100">
+<div class="container-fluid  mt-100" >
  <div class="row">
  
     <div class="col-md-12">
@@ -313,5 +313,70 @@
 </div>
 </div>
 <!-- Search End -->
+<script>
+   
+function removeFromWishlist(proId){
+    event.preventDefault()
+    $.ajax({
+        url:'/delete-from-wishlist',
+          data:{
+           proId:proId
+          },
+          method:'POST',
+          success:function(response){
+
+            if(response.success){
+                
+                document.getElementById('a'+proId).innerHTML=''
+
+                if(response.count == 0){
+                    html=''
+                    html += `<div class="container-fluid  mt-100" >
+ <div class="row">
+ 
+    <div class="col-md-12">
+    
+            <div class="card">
+       
+        <div class="card-body cart">
+                <div class="col-sm-12 empty-cart-cls text-center">
+                    <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                    <h3><strong>Your Wishlist is Empty</strong></h3>
+                    <h4>Add something to make me happy :)</h4>
+                    <a href="shop" class="btn btn-dark cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                  
+                
+                </div>
+        </div>
+</div>
+        
+    
+    </div>
+ 
+ </div>
+
+</div>`
+document.getElementById('wishlist1').innerHTML = html
+                }
+
+            
+                Swal.fire({
+           position: 'top',
+            icon: 'success',
+             title: 'Product removed from wishlist',
+            showConfirmButton: false,
+           timer: 1500 }) 
+                 
+                
+                
+            
+                   
+            }
+          }
+
+    })
+} 
+    
+</script>
 
 <%- include("../layouts/userFooter") %>

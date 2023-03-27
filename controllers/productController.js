@@ -44,7 +44,7 @@ const addProductLoad = async (req,res,next) => {
       categorylist = await Category.find({})
       singleCategory  = await Category.findById({ _id: req.query.id})
       categoryProducts = await Product.find({category: req.query.id})
-      res.render('categoryShop', {singleCategory, categoryProducts,categorylist})
+      res.render('categoryShop2', {singleCategory, categoryProducts,categorylist})
       
     } catch (error) {
       console.log(error.message);

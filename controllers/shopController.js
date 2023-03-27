@@ -542,15 +542,23 @@ const wishList = async (req, res) => {
 }
 const deleteFromWishlist = async (req, res) => {
   try {
+    
     const productId = req.query.id
     const userData = req.session.user_id
     const user = await User.findOne({ _id: userData })
     const productIndex = user.wishList.findIndex(p => p.productId == productId)
     user.wishList.splice(productIndex, 1)
+  
 
 
-    updated = await user.save()
-    res.redirect('/wishlist')
+   const updated = await user.save()
+   let count=0
+   if(updated.wishList.length>0){
+      count = updated.wishList.length
+   }
+  let response={success:true,count}
+    res.json(response)
+    
 
 
   } catch (error) {

@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Order Return Status</title>
+    <style>
+      /* CSS styles go here */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 36px;
+      }
+      nav {
+        background-color: #555;
+        color: #fff;
+        padding: 10px;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: flex;
+      }
+      li {
+        margin-right: 20px;
+      }
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+      section {
+        padding: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #555;
+        color: #fff;
+      }
+      .status {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .status.pending {
+        color: orange;
+      }
+      .status.received {
+        color: green;
+      }
+      .status.rejected {
+        color: red;
+      }
+      footer {
+        background-color: #555;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Order Return Status</h1>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Account</a></li>
+      </ul>
+    </nav>
+    <section>
+      <h2>Order Details</h2>
+      <table>
+        <tr>
+          <th>Order Number</th>
+          <td>123456789</td>
+        </tr>
+        <tr>
+          <th>Return Number</th>
+          <td>987654321</td>
+        </tr>
+        <tr>
+          <th>Return Date</th>
+          <td>March 26, 2023</td>
+        </tr>
+        <tr>
+          <th>Return Status</th>
+          <td><span class="status received">Received</span></td>
+        </tr>
+        <tr>
+          <th>Return Reason</th>
+          <td>Item damaged during shipping</td>
+        </tr>
+      </table>
+    </section>
+    <footer>
+      &copy; 2023 My Store
+    </footer>
+  </body>
+</html>
