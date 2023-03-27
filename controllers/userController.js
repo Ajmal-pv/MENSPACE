@@ -142,18 +142,9 @@ const loadpage=async(req,res,next)=>{
     const products = await Product.find({})
     if(userData){
         const cart = await Cart.findOne({user:userData})
-        let cartlength=0
-        if(cart.product){
-           cartlength = cart.product.length
-          }
         
-          let wishlist=0
-          if(user.wishList.length){
-              wishlist = user.wishList.length
-              
-          }
         
-        res.render('loadpage',{userData,bannerData,products,cartlength,wishlist})
+        res.render('loadpage',{userData,bannerData,products,cart})
        
     }else{
         let cartlength=0
@@ -617,20 +608,10 @@ const shopLoad = async(req,res,next)=>{
                 wishlist
             })}else{
         if(userData){
-            const cart = await Cart.findOne({user:userData})
-            let cartlength=0
-            if(cart.product){
-               cartlength = cart.product.length
-              }
             
-              let wishlist=0
-              if(user.wishList.length){
-                  wishlist = user.wishList.length
-                  
-              }
               
             
-              res.render('shop2',{productList,userData,categorylist,cartData,cartlength,wishlist})
+              res.render('shop2',{productList,userData,categorylist,cartData})
            
         }else{
             let cartlength=0
@@ -660,21 +641,10 @@ const productDetail = async(req,res,next)=>{
     
 
      if(userData){
-        const user = await User.findOne({_id:userData})
-        const cart = await Cart.findOne({user:userData})
-        let cartlength=0
-        if(cart.product){
-           cartlength = cart.product.length
-          }
         
-          let wishlist=0
-          if(user.wishList.length){
-              wishlist = user.wishList.length
-              
-          }
           
         
-          res.render('productdetails',{productData,userData,cartlength,wishlist})
+          res.render('productdetails',{productData,userData})
        
     }else{
         let cartlength=0

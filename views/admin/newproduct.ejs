@@ -172,8 +172,9 @@
                             </div>
   
                      <label for="" class="mt-4">Image</label>
+					 <div id="preview"   class="col-lg-3 mt-3"  ></div>
                           <div class="form-input"> 
-                               <input type="file" name="image" accept="image/png,image/jpeg,image/webp"  multiple> 
+                               <input type="file" name="image" id="fileInput" accept="image/png,image/jpeg,image/webp"  multiple> 
                         </div>
                          <input type="submit" value="Submit" class="mt-4" style="background-color:cornflowerblue;">
             </form>
@@ -189,6 +190,29 @@
 		</main>
 		<!-- MAIN -->
 	</section>
+	<script>
+		const fileInput = document.getElementById('fileInput');
+		const preview = document.getElementById('preview');
+	  
+		fileInput.addEventListener('change', () => {
+		  preview.innerHTML = '';
+		  const files = fileInput.files;
+	  
+		  for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const reader = new FileReader();
+	  
+			reader.addEventListener('load', () => {
+			  const img = new Image();
+			  img.src = reader.result;
+			  preview.appendChild(img);
+			});
+	  
+			reader.readAsDataURL(file);
+		  }
+		});
+	  
+	   </script>
 	
 
 	<script src="/adminhome/script.js"></script>

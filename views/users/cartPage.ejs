@@ -338,6 +338,7 @@
     </div>
 </div>
 <!-- Search End -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 <script>
 
     function changeQuantity(cartId, proId, count) {
@@ -366,6 +367,8 @@
       })
     }
 
+    
+
 
     function deleteFromCart(productDelete){
         $.ajax({
@@ -376,7 +379,13 @@
     {  
                document.getElementById('a'+productDelete).innerHTML=''
                document.getElementById('price').innerHTML=jsonresponse.cartTotal
-               if(jsonresponse.cartLength==0){
+               Swal.fire({
+           position: 'top',
+            icon: 'success',
+             title: 'Product removed from Cart',
+            showConfirmButton: false,
+           timer: 1500 })
+               if(jsonresponse.count==0){
                 let html = ''
                 html += ` <div class="container-fluid  mt-100">
                    <div class="row">
@@ -415,4 +424,5 @@
     }
    
   </script>
+
 <%- include("../layouts/userFooter") %>
