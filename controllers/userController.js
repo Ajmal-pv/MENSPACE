@@ -103,12 +103,12 @@ const sendResetMail = async(name,email,token,next)=>{
 const loadpage=async(req,res,next)=>{
     try {
     const  userData = req.session.user_id
-    const user = await User.findOne({_id:userData})
+    
     const bannerData = await Banner.find({})
     const products = await Product.find({})
     if(userData){
         const cart = await Cart.findOne({user:userData})
-        
+        const user = await User.findOne({_id:userData})
         
         res.render('loadpage',{userData,bannerData,products,cart})
        
@@ -255,7 +255,7 @@ const verifyLogin = async (req,res,next) => {
     // logout
 const userLogout = async(req,res,next)=>{
     try {
-        req.session.destroy();
+        req.session.user_id = ''
         res.redirect('/');
         
     } catch (error) {
@@ -534,8 +534,9 @@ const shopLoad = async(req,res,next)=>{
 }
 const logoutUser = async(req,res,next)=>{
     try {
-        req.session.destroy()
-        
+
+        req.session.user_id = ''
+  
         res.redirect('/')
     } catch (error) {
        console.log(error.message); 

@@ -723,7 +723,7 @@ const deleteCoupon =async(req,res,next)=>{
 // logout
 const logout = async (req, res,next) => {
   try {
-    req.session.destroy()
+    req.session.admin_id = ''
     res.redirect('/admin')
   } catch (error) {
     console.log(error.mesage)
