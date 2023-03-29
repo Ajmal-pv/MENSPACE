@@ -502,23 +502,23 @@ const shopLoad = async(req,res,next)=>{
        const productList = await Product.find({}).sort({price:sortValue})
         
         const userData = req.session.user_id
-        const user = await User.findOne({_id:userData})
+       
         const categorylist = await Category.find({})
-        const cartData = await Cart.findOne({user:req.session.user_id})
+        
 
         if(req.query.isRender){
             res.json({
                 productList,
                 userData,
                 categorylist,
-                cartData,
+                
                 cartlength,
                 wishlist
             })}else{
         if(userData){
             
-              
-            
+            const cartData = await Cart.findOne({user:req.session.user_id})
+            const user = await User.findOne({_id:userData})
               res.render('shop2',{productList,userData,categorylist,cartData})
            
         }else{
