@@ -537,6 +537,21 @@ const orderCancel = async (req, res) => {
  
 }
 
+const returnOrder = async (req,res)=>{
+  try {
+    
+   const returnOrder = await  Order.findByIdAndUpdate(
+      { _id: req.body.orderId },
+      { $set: { status: "returneProcessing", paymentStatus: "refundProcessing", reasonOfReturn: req.body.reason } })
+
+      res.json(returnOrder)
+
+  } catch (error) {
+    console.log(error.message);
+    console.log("return order section");
+  }
+}
+
 const
   addToWishlist = async (req, res) => {
     try {
@@ -626,5 +641,6 @@ module.exports = {
   orderCancel,
   addToWishlist,
   wishList,
-  deleteFromWishlist
+  deleteFromWishlist,
+  returnOrder
 }

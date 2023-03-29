@@ -63,6 +63,7 @@ user_route.get('/orders',auth.isLogin,shopController.orderLoad)
 user_route.get('/ordersingle',auth.isLogin,shopController.orderDetails)
 user_route.post('/orderCancel',auth.isLogin,shopController.orderCancel)
 
+user_route.post('/returnOrder',auth.isLogin,shopController.returnOrder)
 
 
 //profile edit  

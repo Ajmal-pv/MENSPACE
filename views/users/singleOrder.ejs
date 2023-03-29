@@ -529,10 +529,9 @@
                                 <%} else if(orderData.status=="Delivered" ) { %>
                                     <div class="d-flex justify-content-center mt-3">
 
+\
 
-
-
-                                        <button class="btn btn-outline-danger"   onclick="showPopup()">Return
+                                        <button class="btn btn-outline-danger" id="returnbtn"   onclick="showPopup()">Return
                                             Order</button>
 
 
@@ -661,6 +660,9 @@
 
     }
 
+
+
+
     function orderCancel(orderId) {
 
 let reason = document.getElementById('cancelReason').value;
@@ -688,6 +690,26 @@ $.ajax({
     }}
 })
 }
+
+function orderReturn(orderId) {
+        let reason = document.getElementById('returnReason').value;
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('returnbtn').style.display = 'none'
+        document.getElementById('cancelValue').innerHTML='returneProcessing'
+
+
+        $.ajax({
+            url: '/returnOrder',
+            data: {
+                orderId: orderId,
+                reason: reason,
+            },
+            method: 'post',
+            success: (response) => {
+                alert("Your Order Returned")
+            }
+        })
+    }
     </script>
 
 <%- include("../layouts/userFooter") %>

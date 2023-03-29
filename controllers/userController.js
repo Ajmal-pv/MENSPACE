@@ -115,7 +115,7 @@ const loadpage=async(req,res,next)=>{
     }else{
         let cartlength=0
         let wishlist=0
-        res.render('loadpage',{bannerData,products,cartlength,wishlist})
+        res.render('loadpage',{bannerData,products,cartlength,wishlist,userData})
     }
     } catch (error) {
         console.log(error.message)
