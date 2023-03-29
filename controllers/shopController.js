@@ -10,6 +10,7 @@ const Razorpay = require('razorpay')
 const Order = require('../models/orderModel');
 const { find } = require('../models/userModel')
 const { response } = require('../routes/userRoute')
+const { constants } = require('buffer')
 
 
 
@@ -128,6 +129,8 @@ const changeQuantity = async (req, res) => {
     const cart = await Cart.findOne({ _id: cartId });
     const product = await Product.findOne({ _id: proId })
     const price = product.price;
+    const stock = product.stock
+    if(quantity<stock && count ==1){
 
     const totalPrice = cart.totalprice + count * product.price;
 
@@ -146,8 +149,39 @@ const changeQuantity = async (req, res) => {
        
     const updatedQuantity = quantity + count;
     const totalprice = updatedQuantity * price
-    const jsonResponse = { updatedQuantity, totalPrice, totalprice };
-    res.json(jsonResponse);
+    const jsonResponse = { success:true, updatedQuantity, totalPrice, totalprice };
+    res.json(jsonResponse);}
+else if(count==-1){
+  const totalPrice = cart.totalprice + count * product.price;
+
+
+  await Cart.updateOne(
+    { _id: cartId, "product.productId": proId },
+    { $inc: { "product.$.quantity": count } }
+  );
+
+
+
+  const cartData = await Cart.updateOne(
+    { _id: cartId },
+    { $set: { totalprice: totalPrice } }
+  );
+     
+  const updatedQuantity = quantity + count;
+  const totalprice = updatedQuantity * price
+  const jsonResponse = { success:true, updatedQuantity, totalPrice, totalprice };
+  res.json(jsonResponse);
+
+}
+
+    else{
+      
+        console.log('stock out');
+        const jsonResponse ={failed:true}
+        res.json(jsonResponse)
+        
+    }
+   
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
     console.log("change quantity section");
@@ -489,12 +523,18 @@ const orderDetails = async (req, res) => {
 }
 
 const orderCancel = async (req, res) => {
-  const orderId = req.query.id
-  const singleOrder = await Order.findById({ _id: orderId })
-  singleOrder.status = "Cancelled"
-  await singleOrder.save()
-
-  res.redirect('/orders')
+  try {
+    const orderId = req.body.orderId
+    const singleOrder = await Order.findById({ _id: orderId })
+    singleOrder.status = "Cancelled"
+    await singleOrder.save()
+  const response={success:true}
+    res.json(response)
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+ 
 }
 
 const

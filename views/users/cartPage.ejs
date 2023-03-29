@@ -136,11 +136,11 @@
     <section class="shopping-cart spad" >
 
     
-    <div class="container">
-        <div class="row" id="html1">
+    <div class="container" id="cart1">
+        <div class="row" >
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
-                    <table id="cart1">
+                    <table >
                         <thead>
                             <tr >
                                 <th>Product</th>
@@ -261,6 +261,7 @@
        
        </div>
        <% } %>
+</div>   
    
     
 
@@ -359,32 +360,44 @@
         },
         method: 'post',
         success: (response) => {
+            if(response.success){
            document.getElementById(proId).innerHTML=response.updatedQuantity 
            document.getElementById('price').innerHTML= '₹'+response.totalPrice
            document.getElementById('he'+proId).innerHTML ='₹'+ response.totalprice
          
+        }else if(response.failed){
+            Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Product Out Of stock',
+
+                   })
         }
+    }
       })
     }
 
-    
-
-
-    function deleteFromCart(productDelete){
-        $.ajax({
+    function  deleteFromCart(productDelete){
+       
+			Swal.fire({
+   title: 'Are you sure about removing product from cart?',
+   text: "You won't be able to revert this!",
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#3085d6',
+   cancelButtonColor: '#d33',
+   confirmButtonText: 'Yes, confirm!'
+}).then((result) => {
+   if (result.value) {
+    $.ajax({
             
             url:'/remove-product?id='+productDelete,
             method:'get',
             success: function(jsonresponse)
-    {  
+    {             
                document.getElementById('a'+productDelete).innerHTML=''
                document.getElementById('price').innerHTML=jsonresponse.cartTotal
-               Swal.fire({
-           position: 'top',
-            icon: 'success',
-             title: 'Product removed from Cart',
-            showConfirmButton: false,
-           timer: 1500 })
+               
                if(jsonresponse.count==0){
                 let html = ''
                 html += ` <div class="container-fluid  mt-100">
@@ -421,7 +434,59 @@
             console.log('Error deleting product:', error);
         }
              })
-    }
+   }
+})}
+
+
+    // function deleteFromCart(productDelete){
+
+
+    //     $.ajax({
+            
+    //         url:'/remove-product?id='+productDelete,
+    //         method:'get',
+    //         success: function(jsonresponse)
+    // {             
+    //            document.getElementById('a'+productDelete).innerHTML=''
+    //            document.getElementById('price').innerHTML=jsonresponse.cartTotal
+               
+    //            if(jsonresponse.count==0){
+    //             let html = ''
+    //             html += ` <div class="container-fluid  mt-100">
+    //                <div class="row">
+        
+    //                  <div class="col-md-12">
+           
+    //                <div class="card">
+              
+    //            <div class="card-body cart">
+    //                    <div class="col-sm-12 empty-cart-cls text-center">
+    //                        <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+    //                        <h3><strong>Your Cart is Empty</strong></h3>
+    //                        <h4>Add something to make me happy :)</h4>
+    //                        <a href="shop" class="btn btn-dark cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                         
+                       
+    //                    </div>
+    //            </div>
+    //        </div>
+               
+           
+    //        </div>
+        
+    //     </div>
+       
+    //    </div>
+    //             `
+    //       document.getElementById('cart1').innerHTML = html      
+    //            }
+    // },
+    //     error: function(error) 
+    //     {
+    //         console.log('Error deleting product:', error);
+    //     }
+    //          })
+    // }
    
   </script>
 

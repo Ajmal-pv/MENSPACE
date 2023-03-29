@@ -35,6 +35,8 @@ body {
 	height: 100%;
 	font-family: "Nunito Sans", sans-serif;
 	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+
 }
 
 h1,

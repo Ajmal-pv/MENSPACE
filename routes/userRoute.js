@@ -2,8 +2,9 @@ const express = require("express")
 const user_route = express();
 const session = require("express-session")
 const config = require("../config/config")
+const env = require('dotenv').config()
 user_route.use(session({
-  secret: config.sessionSecret,
+  secret: process.env.sessionSecret,
   saveUninitialized: true,
   resave: false
 }))
@@ -60,7 +61,7 @@ user_route.post('/verify-payment',shopController.verifyPayment)
 user_route.get('/orderConfirm',shopController.confirmPage)
 user_route.get('/orders',auth.isLogin,shopController.orderLoad)
 user_route.get('/ordersingle',auth.isLogin,shopController.orderDetails)
-user_route.get('/orderCancel',auth.isLogin,shopController.orderCancel)
+user_route.post('/orderCancel',auth.isLogin,shopController.orderCancel)
 
 
 

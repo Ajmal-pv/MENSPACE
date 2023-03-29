@@ -66,7 +66,7 @@ const loadDashboard = async (req, res,next) => {
     const userData = await User.findById({ _id: req.session.admin_id })
     const users = await User.find({})
     const orderData = await Order.find({}).sort({createdDate:'desc'})
-    const orderSuccess = await Order.find({paymentStatus:"Charged",status: "Delivered" })
+    const orderSuccess = await Order.find({status: "Delivered" })
     
     let sum=0
     for(i=0;i<orderSuccess.length;i++){
@@ -106,43 +106,277 @@ const loadDashboard = async (req, res,next) => {
 ])
 
 
-const weeklySales = await Order.aggregate([
-  {$match:{
-      createdDate:{
-          $gte: new Date(new Date().getTime() - (7*24*60*60*1000))
-      },
+// const weeklySales = await Order.aggregate([
+//   {$match:{
+//       createdDate:{
+//           $gte: new Date(new Date().getTime() - (7*24*60*60*1000))
+//       },
       
-      status:"Delivered"
-  }
+//       status:"Delivered"
+//   }
   
-},
-{
-  $group:{
-      _id:{
-          $dayOfWeek:'$createdDate'
-      },
-      totalAmount:{
-          $sum:
-              "$totalPrice"  
-      }
-  }
-},{
-  $sort:{
-      _id:1
-  }
-}
+// },
+// {
+//   $group:{
+//       _id:{
+//           $dayOfWeek:'$createdDate'
+//       },
+//       totalAmount:{
+//           $sum:
+//               "$totalPrice"  
+//       }
+//   }
+// },{
+//   $sort:{
+//       _id:1
+//   }
+// }
 
-])  
+// ])  
+
+
+// const barChart = weeklySales.map((payment)=> payment.totalAmount) 
+
+
+// const currentDate = new Date();
+//        const sevenDaysAgo = new Date(
+//          currentDate.getFullYear(),
+//          currentDate.getMonth(),
+//          currentDate.getDate() - 6
+//        );
+//        const weeklySales = await Order.aggregate([
+//         {
+//            $match: {
+//             createdDate: { $gte: sevenDaysAgo },
+//            },
+//         },
+//         {
+//           $group: {
+//             _id: {
+//               $dateToString: {
+//                 format: "%Y-%m-%d",
+//                 date: { $toDate: "$createdDate" }
+//               }
+//             },
+//             totalAmount: {
+//               $sum: "$totalPrice"
+//             }
+//           }
+//         },
+//         {
+//           $project: {
+//             _id: 1,
+//             totalAmount: 1,
+//             dayOfWeek: {
+//               $switch: {
+//                 branches: [
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 1] }, then: "Sunday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 2] }, then: "Monday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 3] }, then: "Tuesday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 4] }, then: "Wednesday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 5] }, then: "Thursday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 6] }, then: "Friday" },
+//                   { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 7] }, then: "Saturday" },
+//                 ]
+//               }
+//             }
+//           }
+//         },
+//         {
+//           $sort: {
+//             _id: 1
+//           }
+//         }
+//       ])
+      
+//       console.log(weeklySales)  
+// const currentDate = new Date();
+// const sevenDaysAgo = new Date(
+//   currentDate.getFullYear(),
+//   currentDate.getMonth(),
+//   currentDate.getDate() - 6
+// );
+// const weeklySales = await Order.aggregate([
+//   {
+//     $match: {
+//       createdDate: { $gte: sevenDaysAgo },
+//     },
+//   },
+//   {
+//     $group: {
+//       _id: {
+//         $dateToString: {
+//           format: "%Y-%m-%d",
+//           date: { $toDate: "$createdDate" }
+//         }
+//       },
+//       salesValue: {
+//         $sum: "$totalPrice"
+//       }
+//     }
+//   },
+//   {
+//     $sort: {
+//       _id: 1
+//     }
+//   }
+// ]);
+
+// // Create an array of dates between the start and end dates
+// const allDates = [];
+// let currentDateIter = sevenDaysAgo;
+// while (currentDateIter <= currentDate) {
+//   allDates.push(new Date(currentDateIter));
+//   currentDateIter.setDate(currentDateIter.getDate() + 1);
+// }
+
+// // Find the dates that are not in the weeklySales array
+// const missingDates = allDates.filter(date => !weeklySales.some(sale => sale._id === date.toISOString()));
+
+// // Add the missing dates with a salesValue of 0
+// const missingSales = missingDates.map(date => ({
+//   _id: date.toISOString(),
+//   salesValue: 0
+// }));
+
+// // Concatenate the missing sales with the weekly sales
+// const allSales = weeklySales.concat(missingSales);
+
+// // Sort the sales by date
+// allSales.sort((a, b) => new Date(a._id) - new Date(b._id));
+
+
+
+
+// console.log(allSales,'salllesss');
+// const currentDate = new Date();
+// const sevenDaysAgo = new Date(
+//   currentDate.getFullYear(),
+//   currentDate.getMonth(),
+//   currentDate.getDate() - 6,
+//   23, 59, 59 // set time to end of day
+// );
+// const weeklySales = await Order.aggregate([
+//   {
+//     $match: {
+//       createdDate: { $gte: sevenDaysAgo },
+//     },
+//   },
+//   {
+//     $group: {
+//       _id: {
+//         $dateToString: {
+//           format: "%Y-%m-%d",
+//           date: { $toDate: "$createdDate" }
+//         }
+//       },
+//       totalAmount: {
+//         $sum: "$totalPrice"
+//       }
+//     }
+//   },
+//   {
+//     $project: {
+//       _id: 1,
+//       totalAmount: 1,
+//       dayOfWeek: {
+//         $switch: {
+//           branches: [
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 1] }, then: "Sunday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 2] }, then: "Monday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 3] }, then: "Tuesday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 4] }, then: "Wednesday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 5] }, then: "Thursday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 6] }, then: "Friday" },
+//             { case: { $eq: [{ $dayOfWeek: { $toDate: "$_id" } }, 7] }, then: "Saturday" },
+//           ]
+//         }
+//       }
+//     }
+//   },
+//   {
+//     $sort: {
+//       _id: 1
+//     }
+//   }
+// ]);
+
+// // Create an array of dates between the start and end dates
+// const allDates = [];
+// let currentDateIter = sevenDaysAgo;
+// while (currentDateIter <= currentDate) {
+//   allDates.push(new Date(currentDateIter));
+//   currentDateIter.setDate(currentDateIter.getDate() + 1);
+// }
+
+// // Find the dates that are not in the weeklySales array
+// const missingDates = allDates.filter(date => !weeklySales.some(sale => sale._id === date.toISOString()));
+
+// // Add the missing dates with a total amount of 0
+// // const missingSales = missingDates.map(date => ({
+// //   _id: date.toISOString(),
+// //   totalAmount: 0,
+// //   dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][date.getDay()]
+// // }));
+// const missingSalesByDay = {};
+// missingDates.forEach(date => {
+//   const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][date.getDay()];
+//   if (missingDates != [dayOfWeek]) {
+//     missingSalesByDay[dayOfWeek] = {
+//       _id: date.toISOString(),
+//       totalAmount: 0,
+//       dayOfWeek: dayOfWeek,
+//     };
+//   }
+// });
+
+// // Convert the missingSalesByDay object to an array
+// const missingSales = Object.values(missingSalesByDay);
+// // Concatenate the missing sales with the weekly sales
+// const allSales = weeklySales.concat(missingSales);
+
+// // Sort the sales by date
+// allSales.sort((a, b) => new Date(a._id) - new Date(b._id));
+
+// // Create an array of objects with day and totalAmount
+// const salesByDay = allSales.map(sale => ({
+//   day: sale.dayOfWeek,
+//   totalAmount: sale.totalAmount
+// }));
+
+// console.log(salesByDay);
+
+const lastWeekdata = await Order.aggregate([
+  {
+    $match: {
+      createdDate: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+      status:"Delivered"
+    }
+    
+  },
+  {
+    $group: {
+      _id: {
+        $dateToString: { format: "%Y-%m-%d", date: "$createdDate" }
+      },
+      total: { $sum: "$totalPrice" }
+    }
+  },
+   {
+    $sort: { _id: 1 }
+  }
+])
+const totalsArray = lastWeekdata.map((day) => day.total);
+const daysArray = lastWeekdata.map((day)=>new Date(day._id).toString().slice(0,3));
+const days = JSON.stringify(daysArray);
+const totals = JSON.stringify(totalsArray);
+console.log(daysArray);
+
 
 const circular = categoryWise.map((category)=> category.totalSale)
-const barChart = weeklySales.map((payment)=> payment.totalAmount) 
 
 
-
-  
-
-
-  res.render('home', { admin: userData, orderData, users, sum, products,circular,barChart })
+  res.render('home', { admin: userData, orderData, users, sum, products,circular,days,totals })
     
   } catch (error) {
     console.log(error.message)
@@ -489,7 +723,7 @@ const deleteCoupon =async(req,res,next)=>{
 // logout
 const logout = async (req, res,next) => {
   try {
-    req.session.admin_id=""
+    req.session.destroy()
     res.redirect('/admin')
   } catch (error) {
     console.log(error.mesage)

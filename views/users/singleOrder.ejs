@@ -1,4 +1,108 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<style>
   
+                        .card-stepper {
+                            z-index: 0
+                        }
+
+                        #progressbar-2 {
+                            color: #455A64;
+                        }
+
+                        #progressbar-2 li {
+                            list-style-type: none;
+                            font-size: 13px;
+                            width: 33.33%;
+                            float: left;
+                            position: relative;
+                        }
+
+                        #progressbar-2 #step1:before {
+                            content: '\f058';
+                            font-family: "Font Awesome 5 Free";
+                            color: #fff;
+                            width: 37px;
+                            margin-left: 0px;
+                            padding-left: 0px;
+                        }
+
+                        #progressbar-2 #step2:before {
+                            content: '\f058';
+                            font-family: "Font Awesome 5 Free";
+                            color: #fff;
+                            width: 37px;
+                        }
+
+                        #progressbar-2 #step3:before {
+                            content: '\f058';
+                            font-family: "Font Awesome 5 Free";
+                            color: #fff;
+                            width: 37px;
+                            margin-right: 0;
+                            text-align: center;
+                        }
+
+                        #progressbar-2 #step4:before {
+                            content: '\f111';
+                            font-family: "Font Awesome 5 Free";
+                            color: #fff;
+                            width: 37px;
+                            margin-right: 0;
+                            text-align: center;
+                        }
+
+                        #progressbar-2 li:before {
+                            line-height: 37px;
+                            display: block;
+                            font-size: 12px;
+                            background: #c5cae9;
+                            border-radius: 50%;
+                        }
+
+                        #progressbar-2 li:after {
+                            content: '';
+                            width: 100%;
+                            height: 10px;
+                            background: #c5cae9;
+                            position: absolute;
+                            left: 0%;
+                            right: 0%;
+                            top: 15px;
+                            z-index: -1;
+                        }
+
+                        #progressbar-2 li:nth-child(1):after {
+                            left: 1%;
+                            width: 100%
+                        }
+
+                        #progressbar-2 li:nth-child(2):after {
+                            left: 1%;
+                            width: 100%;
+                        }
+
+                        #progressbar-2 li:nth-child(3):after {
+                            left: 1%;
+                            width: 100%;
+                        }
+
+                        #progressbar-2 li:nth-child(4) {
+                            left: 0;
+                            width: 37px;
+                        }
+
+                        #progressbar-2 li:nth-child(4):after {
+                            left: 0;
+                            width: 37px;
+                        }
+
+                        #progressbar-2 li.active:before,
+                        #progressbar-2 li.dactive:after {
+                            background: #6520ff;
+                        }
+                  
+</style>
   <%- include("../layouts/userHeader") %>
   <!-- Page Preloder
 <div id="preloder">
@@ -178,7 +282,7 @@
                             </td>
                           
                             <td class="product__cart__item">
-                                <p><%=orderData.status%></p>
+                                <p id="cancelValue"><%=orderData.status%></p>
                                 
                             </td>
                            
@@ -191,50 +295,12 @@
                  </tbody>
                  
              </table>
-             <section class="vh-100" style="background-color: #8c9eff;">
+             <section class="vh-100" >
                 <div class="container py-5 h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col-12">
                             <div class="card card-stepper text-black" style="border-radius: 16px;">
-                                <!-- ---------------- -->
-                                <div>
-                                    <table class="table ">
-                                        <thead class=" text-center  " style="background-color: #a0b1be;">
-                                            <tr>
-                                                <th scope="col" class="pl-5 ">Product Name</th>
-                                                <th scope="col" class="pl-5 ">Product</th>
-                                                <th scope="col" class="pl-4">Quantity</th>
-                                                <th scope="col" class="pl-5">Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center ">
-                                            <% for(let i of productData) {%>
-                                                <tr class="">
-                                                    <td class="pl-5 pt-5 mt-5">
-                                                        <h4>
-                                                            <%=i.productId.name%>
-                                                        </h4>
-                                                    </td>
-                                                    <td class="pl-5"><img width="80px" height="80px"
-                                                            src="/productimages/<%=i.productId.image[0]%>"
-                                                            alt=""></td>
-                                                    <td class="pl-5 pt-5 mt-5">
-                                                        <h4>
-                                                            <%=i.quantity%>
-                                                        </h4>
-                                                    </td>
-
-                                                    <td class="pl-5 pt-5 mt-5">
-                                                        <h4>
-                                                            <%=i.productId.price%>
-                                                        </h4>
-                                                    </td>
-                                                </tr>
-                                                <%}%>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- ------------------------- -->
+                               
                                 <div class="card-body p-5">
                                     <% if (orderData.status=="Cancelled" ){ %>
                                         <h2 class="text-danger">Order Canceled </h2>
@@ -310,7 +376,7 @@
                                                         <li class="step0  active text-muted text-center"
                                                             id="step4"></li>
                                                     </ul>
-                                                    <% }else if(orderData.status=="orderd" ) { %>
+                                                    <% }else if(orderData.status=="Placed" ) { %>
                                                         <ul id="progressbar-2"
                                                             class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
                                                             <li class="step0 active dactive text-center"
@@ -320,8 +386,8 @@
                                                             <li class="step0   text-muted text-center"
                                                                 id="step4"></li>
                                                         </ul>
-
-                                                        <%} else if (orderData.status=="shipped" ) { %>
+                                                        
+                                                        <%} else if (orderData.status=="Shipped" ) { %>
                                                             <ul id="progressbar-2"
                                                                 class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
                                                                 <li class="step0 active dactive text-center"
@@ -332,7 +398,7 @@
                                                                 <li class="step0   text-muted text-center"
                                                                     id="step4"></li>
                                                             </ul>
-                                                            <%} else if (orderData.status=="outOfDelivery" ) {%>
+                                                            <%} else if (orderData.status=="Out-for-delivery" ) {%>
                                                                 <ul id="progressbar-2"
                                                                     class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
                                                                     <li class="step0 active dactive text-center"
@@ -344,7 +410,7 @@
                                                                     <li class="step0   text-muted text-center"
                                                                         id="step4"></li>
                                                                 </ul>
-                                                                <%} else if (orderData.status=="deliverd" ) {%>
+                                                                <%} else if (orderData.status=="Delivered" ) {%>
                                                                     <ul id="progressbar-2"
                                                                         class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
                                                                         <li class="step0 active dactive text-center"
@@ -443,12 +509,12 @@
                                 </div>
 
                             </div>
-                            <%if(orderData.status=="orderd" || orderData.status=="shipped" ||
-                                orderData.status=="outOfDelivery" ) {%>
+                            <%if(orderData.status=="Placed" || orderData.status=="Shipped" ||
+                                orderData.status=="Out-for-delivery" ) {%>
                                 <div class="d-flex justify-content-center mt-3">
 
 
-                                    <button class="btn-outline-danger" onclick="showPopup()">Cancel
+                                    <button class="btn btn-outline-danger" id="Cancelbtn" onclick="showPopup()">Cancel
                                         Order</button>
 
                                     <div id="popup" style="display:none;">
@@ -460,13 +526,13 @@
                                 </div>
 
 
-                                <%} else if(orderData.status=="deliverd" ) { %>
+                                <%} else if(orderData.status=="Delivered" ) { %>
                                     <div class="d-flex justify-content-center mt-3">
 
 
 
 
-                                        <button class="btn-outline-danger" onclick="showPopup()">Return
+                                        <button class="btn btn-outline-danger"   onclick="showPopup()">Return
                                             Order</button>
 
 
@@ -489,8 +555,8 @@
                         </div>
                     </div>
                 </div>
-            </section
-         </div>
+          
+     
          <div class="row">
              <div class="col-lg-6 col-md-6 col-sm-6">
                  <div class="continue__btn">
@@ -585,5 +651,43 @@
 </div>
 </div>
 <!-- Search End -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+<script>
+
+    function showPopup() {
+
+        document.getElementById("popup").style.display = "block";
+        document.getElementById('Cancelbtn').style.display ='none'
+
+    }
+
+    function orderCancel(orderId) {
+
+let reason = document.getElementById('cancelReason').value;
+
+document.getElementById('popup').style.display = 'none';
+$.ajax({
+    url: '/orderCancel',
+    data: {
+        orderId: orderId,
+        reason: reason,
+    },
+    method: 'post',
+    success: (response) => {
+        if(response.success){
+        Swal.fire({
+           position: 'top',
+            icon: 'warning',
+             title: 'Your order has Canceled',
+            showConfirmButton: false,
+           timer: 1500 }) 
+
+           document.getElementById('Cancelbtn').style.display = 'none'
+           
+           document.getElementById('cancelValue').innerHTML='Cancelled'
+    }}
+})
+}
+    </script>
 
 <%- include("../layouts/userFooter") %>

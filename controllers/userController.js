@@ -10,41 +10,7 @@ const Banner = require('../models/bannerModel')
 const Cart = require('../models/cartModel')
 
 
-// for mail send
-// const sendVerifyMail = async(name,email,user_id)=>{
-    
-//     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-//     try {
-//        const transporter = nodemailer.createTransport({
-//             host:'smtp.gmail.com',
-//             port:587,
-//             secure:false,
-//             requireTLS:true,
-//             auth:{
-//                 user: process.env.myemail,
-//                 pass: process.env.mypassword
-//             }
-//         });
-//         const mailOptions = {
-//             from : process.env.myemail,
-//             to : email,
-//             subject:'for verifying account',
-//             html:'<p> Hello '+name+',click here to <a href="http://localhost:3000/verify?id='+user_id+'"> verify </a> your MENSPACE account</p>'
-//         }
-//         transporter.sendMail(mailOptions,function(error,info){
-//            if(error){
-//             console.log(error);
-//            }else{
-//             console.log("email has been send",info.response);
-//            }
-    
-//         })
-    
-        
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-//     }
+
 
 //  function for making password secure
 const securePassword = async(password)=>{
@@ -191,16 +157,7 @@ const insertUser = async(req,res,next)=>{
         })
         const userData = await user.save()
         
-    //     if(userData){
-            
-    //         sendVerifyMail(req.body.name,req.body.email,userData._id);
-           
-       
-    //            res.render('registration',{message:"account registration succesful,please verify your email")
-    //        }else{
-    //            res.render('registration',{message:"account registartion failed"})  
-    //        }
-    //    }
+
         
     
         if(userData){
@@ -221,19 +178,6 @@ const insertUser = async(req,res,next)=>{
     }
 
 
-// verifying mail
-// const verifyMail = async(req,res,next)=>{
-//   try {
-//     const updateInfo = await User.updateOne({_id:req.query.id},{$set:{ is_verified:1  }})
-
-//     console.log(updateInfo);
-//     res.render('email-verified');
-
-//   } catch (error) {
-//     console.log(error.message)
-//   }
-
-// }
 //verifying mail
   
 const verifyMail = async(req,res,next)=>{
@@ -257,42 +201,6 @@ const verifyMail = async(req,res,next)=>{
   }
   
 }
-
-
-// otp twilio
-// const sendOTP = async (req, res, next) => 
-// { const countryCode, phoneNumber} = req.body;
-// try{
-// const otpResponse = await client.verify .services (VA8ef99a0f83480395818a7d38e35e07f1)
-// .verifications.create({
-
-// to: +${countryCode}${phoneNumber}`,
-
-
-// });
-// channel: "sms",
-// res.status(200).send(OTP send successfully!: $(JSON.stringify(otpResponse)}`);
-// }catch(error) {
-// res.status(error?.status || 400).send(error?.message || 'Something went wrong!');
-
-// };
-
-
-// // verify otp
-// const verifyOTP = async (req, res, next) =>
-//  { const { countryCode, phoneNumber, otp } = req.body;
-// try{
-// const verifiedResponse = await client.verify.services (VA8ef99a0f83480395818a7d38e35e07f1).verificationChecks.create({
-// to:+${countryCode}${phoneNumber},
-// code: otp,
-// });
-// res.status(200).send(`OTP verified successfully!: ${JSON.stringify(verifiedResponse)}`); 
-// }
-// catch(error) {
-// res.status(error?.status || 400).send(error?.message || 'Something went wrong!');
-// }}
-
-
 
 
 
@@ -626,7 +534,8 @@ const shopLoad = async(req,res,next)=>{
 }
 const logoutUser = async(req,res,next)=>{
     try {
-        req.session.user_id=""
+        req.session.destroy()
+        
         res.redirect('/')
     } catch (error) {
        console.log(error.message); 

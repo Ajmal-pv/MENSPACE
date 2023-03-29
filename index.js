@@ -14,7 +14,7 @@ const path = require('path')
 const errorHandler = require('./errorHandler')
 
 
-
+dbConfig.dbConfig()
 app.use('/',user_route)
 app.use('/admin',admin_route)
 app.use(express.static(path.join(__dirname, 'public')));

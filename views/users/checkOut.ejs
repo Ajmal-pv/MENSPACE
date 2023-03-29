@@ -101,7 +101,7 @@
             
             
             <form >
-                <input type="text" placeholder="Coupon code" id="couponCode" name="code">
+                <input type="text" placeholder="Coupon code" id="couponCode" name="code" >
                 <button id="couponSubmit2" type="submit" onclick="deletecoupon()" style="display: none;color: red;" >DELETE</button>
                 
                 <button id="couponSubmit" type="submit" onclick="couponapply()" >APPLY</button>
@@ -443,6 +443,7 @@ function verifyPayment(payment,order){
 
     })
 }
+
 function couponapply(){
   event.preventDefault()
   

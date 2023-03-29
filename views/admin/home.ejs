@@ -223,9 +223,13 @@
                 
 			</div>	
 			<input type="hidden" value="<%=circular%>" id="circularChart" >
-			<input type="hidden" value="<%= barChart %>" id="barChartValues">
+			<input type="hidden" id="days" value="<%=days%>">
+			<input type="hidden" id="totals" value="<%=totals%>">
+			
+			
+			
 
-		</main>
+		
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
@@ -267,18 +271,22 @@ const myChart = new Chart(ctx, {
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 <script>
-	const weeklyWise = document.getElementById("barChartValues").value.split(',').map(Number)
-	var xValues = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"];
-	var yValues = [weeklyWise[0],weeklyWise[1], weeklyWise[2], weeklyWise[3],weeklyWise[4],weeklyWise[5],weeklyWise[6]];
+	var ctxB = document.getElementById("barChart").getContext('2d');
+		var days = document.getElementById('days');
+		days = days.value
+		var totals = document.getElementById('totals').value;
+		const daysArray = JSON.parse(days);
+		const totalsArray = JSON.parse(totals);
+	
 	var barColors = ["orange", "orange","orange","orange","orange","orange","orange"];
 	
 	new Chart("barChart", {
 	  type: "bar",
 	  data: {
-		labels: xValues,
+		labels:  daysArray,
 		datasets: [{
 		  backgroundColor: barColors,
-		  data: yValues
+		  data: totalsArray
 		}]
 	  },
 	  options: {
