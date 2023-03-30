@@ -138,6 +138,8 @@
                         <h4 class="font-weight-bold mt-0 mb-4">Manage Address</h4>
                         
                         </div>
+                         <% if(userData){ %>
+                            <% if(userData.Address.length>0){ %> 
                         <div class="row">
                             <% for(var i=0;i<address.length;i++){ %>
                             <div class="col-md-6">
@@ -158,6 +160,7 @@
                             </div>
                             <% } %>
                         </div>
+                        <% }} %>
 
                     </div>
                    <a href="checkOut"> <button type="button" class="btn btn-dark" style="float: right;">go back</button></a>

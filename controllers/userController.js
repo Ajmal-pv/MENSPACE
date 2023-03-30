@@ -592,8 +592,9 @@ const userProfile = async(req,res,next)=>{
     try {
      const  userid = await req.session.user_id
      
-     const userData = await User.findOne({_id:userid})
+     
      if(userid){
+        const userData = await User.findOne({_id:userid})
        
         res.render('userProfile',{userData})
      }else{

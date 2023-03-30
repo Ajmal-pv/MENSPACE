@@ -125,11 +125,10 @@
 
 
 
+  
 
+  
 
-
-
-<% if(userData){ %>
 
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -138,12 +137,19 @@
           <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
             <ol class="breadcrumb mb-0">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <!-- <li class="breadcrumb-item"><a href="#">User</a></li> -->
+             
               <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+              <div class="pl-5 ml-5">
+                <a href="/manageAddress">    <button type="button" class="btn btn-outline-primary ">Manage Address</button></a>
+              </div>
+              
+
             </ol>
           </nav>
         </div>
       </div>
+      <% if(userData){ %>
+        <% if(userData.Address.length>0){ %>
   
       <div class="row">
         <div class="col-lg-4">
@@ -328,5 +334,7 @@
     </div> -->
   </section>
   <% } %>
+  <% } %>
+
 
   <%- include("../layouts/userFooter.ejs") %>
