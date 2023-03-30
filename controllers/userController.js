@@ -102,19 +102,17 @@ const sendResetMail = async(name,email,token,next)=>{
 // loading loadpage
 const loadpage=async(req,res,next)=>{
     try {
-    const  userData = req.session.user_id
-    
+    let  userData = req.session.user_id
     const bannerData = await Banner.find({})
     const products = await Product.find({})
     if(userData){
         const cart = await Cart.findOne({user:userData})
         const user = await User.findOne({_id:userData})
-        
         res.render('loadpage',{userData,bannerData,products,cart})
-       
     }else{
         let cartlength=0
         let wishlist=0
+        let userData = null
         res.render('loadpage',{bannerData,products,cartlength,wishlist,userData})
     }
     } catch (error) {
@@ -206,7 +204,7 @@ const verifyMail = async(req,res,next)=>{
 
 // loading login page
 
-const loginLoad = async(req,res,nex)=>{
+const loginLoad = async(req,res,next)=>{
     try {
         res.render('login')
         
@@ -490,18 +488,39 @@ const resetPassword = async(req,res,next)=>{
 const shopLoad = async(req,res,next)=>{
     try {
         const sort = req.query.sort;
+        const search= req.query.search ||"";
+        const category = req.query.categoryId || ""
+
+
+   
+        const searchData = new String(search).trim()
+        
        
         let query ={
 
         }
 
+        if(category){
+            query={
+                category:category
+            }
+        }
+        if (search) {
+            query["$or"] = [
+                {name: { $regex: searchData, $options: "i" } },
+                { discription: { $regex: searchData, $options: "i" } },
+                
+            ];
+        }
         var sortValue = 1
         if(sort == "high-to-low"){
            sortValue = -1;
         }
-       const productList = await Product.find({}).sort({price:sortValue})
+
+       const productList = await Product.find(query).sort({price:sortValue})
+       
         
-        const userData = req.session.user_id
+        let userData = req.session.user_id
        
         const categorylist = await Category.find({})
         
@@ -510,21 +529,21 @@ const shopLoad = async(req,res,next)=>{
             res.json({
                 productList,
                 userData,
-                categorylist,
+                categorylist
                 
-                cartlength,
-                wishlist
+                
             })}else{
         if(userData){
             
             const cartData = await Cart.findOne({user:req.session.user_id})
             const user = await User.findOne({_id:userData})
-              res.render('shop2',{productList,userData,categorylist,cartData})
+              res.render('shop',{productList,userData,categorylist,cartData})
            
         }else{
             let cartlength=0
             let wishlist=0
-            res.render('shop2',{productList,categorylist,cartlength,wishlist})
+            userData= null
+            res.render('shop',{productList,categorylist,cartlength,wishlist,userData})
         }} 
     } catch (error) {
         console.log(error.message);
@@ -557,6 +576,7 @@ const productDetail = async(req,res,next)=>{
           res.render('productdetails',{productData,userData})
        
     }else{
+      let userData= null
         let cartlength=0
         let wishlist=0
         res.render('productdetails',{productData,userData,cartlength,wishlist})
